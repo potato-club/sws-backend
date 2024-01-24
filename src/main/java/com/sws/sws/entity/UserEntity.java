@@ -1,5 +1,6 @@
 package com.sws.sws.entity;
 
+import com.sws.sws.enums.Level;
 import com.sws.sws.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,10 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<FriendsEntity> friends;
 
     @OneToMany(mappedBy = "userEntity")
     private List<PostEntity> posts;
@@ -49,6 +53,10 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole userRole;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Level level;
 
     @Column(nullable = false, unique = false)
     private Boolean isDel;
