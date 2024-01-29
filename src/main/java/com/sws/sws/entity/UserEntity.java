@@ -4,6 +4,7 @@ import com.sws.sws.enums.Level;
 import com.sws.sws.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,17 +14,17 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Getter
-@Table
+@Builder
 public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
     @OneToMany(mappedBy = "userEntity")
     private List<FriendsEntity> friends;
 
-    @OneToMany(mappedBy = "userEntity")
+    @OneToMany(mappedBy = "user")
     private List<PostEntity> posts;
 
     @OneToMany(mappedBy = "userEntity")
@@ -39,10 +40,10 @@ public class UserEntity {
     private List<UserTagEntity> userTags;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String userName;
 
     @Column(nullable = false, unique = true)
-    private String loginId;
+    private String userEmail;
 
     @Column(nullable = false)
     private String password;
@@ -60,6 +61,8 @@ public class UserEntity {
 
     @Column(nullable = false, unique = false)
     private Boolean isDel;
+
+
 
 
 }

@@ -1,7 +1,11 @@
 package com.sws.sws.entity;
 
+import com.sws.sws.dto.CreatePostRequestDto;
+import com.sws.sws.dto.CreatePostResponseDto;
+import com.sws.sws.repository.UserRepository;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PostEntity {
 
     @Id
@@ -20,11 +25,11 @@ public class PostEntity {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    private UserEntity userEntity;
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name="category_id")
-    private CategoryEntity categoryEntity;
+    private CategoryEntity category;
 
     @OneToMany(mappedBy = "postEntity")
     private List<CommentEntity> comments;
@@ -51,9 +56,26 @@ public class PostEntity {
     private LocalDateTime createdAt;
 
     @Column(nullable = false, unique = false)
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     @Column(nullable = false, unique = false)
     private Boolean isDel;
+
+
+    public PostEntity(CreatePostRequestDto createPostRequestDto, UserRepository userRepository) {
+        this.title = createPostRequestDto.getTitle();
+        this.content =createPostRequestDto.getContent();
+        this.user = userRepository.findById(createPostRequestDto.getUserId()).orElse(null);
+
+    }
+
+    public PostEntity(CreatePostResponseDto createPostResponseDto, UserRepository userRepository){
+        this.title = createPostResponseDto.getTitle();
+        this.content=createPostResponseDto.getContent();
+        this.user = userRepository.findById(createPostResponseDto.getUserId()).orElse(null);
+        this.id = createPostResponseDto.getId();
+        this.createdAt = createPostResponseDto.getCreatedAt();
+        this.updatedAt = createPostResponseDto.getUpdatedAt();
+    }
 
 }
