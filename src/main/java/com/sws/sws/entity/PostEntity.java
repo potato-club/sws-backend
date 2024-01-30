@@ -1,15 +1,12 @@
 package com.sws.sws.entity;
 
-import com.sws.sws.dto.CreatePostRequestDto;
-import com.sws.sws.dto.CreatePostResponseDto;
-import com.sws.sws.repository.UserRepository;
+import com.sws.sws.enums.PostTime;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -17,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostEntity {
+public class PostEntity extends PostTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +23,6 @@ public class PostEntity {
     @ManyToOne
     @JoinColumn(name="user_id")
     private UserEntity user;
-
-    @ManyToOne
-    @JoinColumn(name="category_id")
-    private CategoryEntity category;
 
     @OneToMany(mappedBy = "postEntity")
     private List<CommentEntity> comments;
@@ -43,39 +36,24 @@ public class PostEntity {
     @OneToMany(mappedBy = "postEntity")
     private List<PostTagEntity> postTags;
 
+    @ManyToOne
+    private CategoryEntity category;
+
     @Column(nullable = false, unique = false)
     private String title;
 
     @Column(nullable = false, unique = false)
     private String content;
 
-    @Column(nullable = false, unique = false)
+//    @Column(nullable = false, unique = false)
+    @Column
     private int views;
 
-    @Column(nullable = false, unique = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false, unique = false)
-    private LocalDateTime updatedAt;
-
-    @Column(nullable = false, unique = false)
+//    @Column(nullable = false, unique = false)
+    @Column
     private Boolean isDel;
 
 
-    public PostEntity(CreatePostRequestDto createPostRequestDto, UserRepository userRepository) {
-        this.title = createPostRequestDto.getTitle();
-        this.content =createPostRequestDto.getContent();
-        this.user = userRepository.findById(createPostRequestDto.getUserId()).orElse(null);
 
-    }
-
-    public PostEntity(CreatePostResponseDto createPostResponseDto, UserRepository userRepository){
-        this.title = createPostResponseDto.getTitle();
-        this.content=createPostResponseDto.getContent();
-        this.user = userRepository.findById(createPostResponseDto.getUserId()).orElse(null);
-        this.id = createPostResponseDto.getId();
-        this.createdAt = createPostResponseDto.getCreatedAt();
-        this.updatedAt = createPostResponseDto.getUpdatedAt();
-    }
 
 }

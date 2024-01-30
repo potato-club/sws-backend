@@ -1,25 +1,34 @@
 package com.sws.sws.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@Setter
+@Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "category")
-    private List<PostEntity> posts;
+    private String name;
 
-    @Column(nullable = false, unique = true)
-    private String categoryName;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private CategoryEntity category;
+
+    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<PostEntity> posts = new ArrayList<>();
+
+
 }
