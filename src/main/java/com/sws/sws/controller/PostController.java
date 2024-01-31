@@ -22,9 +22,8 @@ public class PostController {
 
     @PostMapping()
     public ResponseEntity<String> createPost(@RequestBody RequestPostDto dto) {
-        Long save = postService.createPost(dto);
-
-        return ResponseEntity.ok().body("{\"postId\": " + save + "}");
+        postService.createPost(dto);
+        return ResponseEntity.ok().body("게시물이 생성되었습니다.");
     }
 
 

@@ -26,7 +26,7 @@ public class PostService {
 
         List<PostEntity> all = postRepository.findTop5ByOrderByCreatedAtDesc();
 
-        if(all.isEmpty()){
+        if (all.isEmpty()) {
             return ResponsePostListDto.builder()
                     .size(0)
                     .posts(Collections.emptyList())
@@ -34,7 +34,7 @@ public class PostService {
         } else {
 
             List<ResponsePostDto> collect = all.stream()
-                    .filter(Objects::isNull)
+                    .filter(Objects::nonNull)
                     .map(ResponseValue::getAllBuild)
                     .collect(Collectors.toList());
 
