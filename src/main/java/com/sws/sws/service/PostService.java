@@ -1,9 +1,12 @@
 package com.sws.sws.service;
 
 import com.sws.sws.dto.post.RequestPostDto;
+import com.sws.sws.dto.post.RequestUpdatePostDto;
 import com.sws.sws.dto.post.ResponsePostDto;
 import com.sws.sws.dto.post.ResponsePostListDto;
 import com.sws.sws.entity.PostEntity;
+import com.sws.sws.error.ErrorCode;
+import com.sws.sws.error.exception.PostNotFoundException;
 import com.sws.sws.repository.PostRepository;
 import com.sws.sws.utils.ResponseValue;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +59,25 @@ public class PostService {
         PostEntity savedPost = postRepository.save(post); // 게시물 저장하고
 
         return savedPost.getId(); // 게시물 id값 반환
+    }
+
+    public Long updatePost(RequestUpdatePostDto updatePostDto, Long id) {
+        PostEntity originPost = postRepository.findById(id).
+                orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
+
+        String updatedTitle = updatePostDto.getTitle();
+        String updatedContent = updatePostDto.getContent();
+
+        originPost.updatePost(updatedTitle, updatedContent);
+        return postRepository.save(originPost).getId();
+    }
+
+    public void deletePost(Long id) {
+
+        PostEntity originPost = postRepository.findById(id).
+                orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.",ErrorCode.POST_NOT_FOUND_EXCEPTION));
+
+        postRepository.deleteById(id);
     }
 
 

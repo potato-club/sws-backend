@@ -1,6 +1,7 @@
 package com.sws.sws.controller;
 
 import com.sws.sws.dto.post.RequestPostDto;
+import com.sws.sws.dto.post.RequestUpdatePostDto;
 import com.sws.sws.dto.post.ResponsePostListDto;
 import com.sws.sws.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,18 @@ public class PostController {
     public ResponseEntity<String> createPost(@RequestBody RequestPostDto dto) {
         postService.createPost(dto);
         return ResponseEntity.ok().body("게시물이 생성되었습니다.");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updatePost(@RequestBody RequestUpdatePostDto dto, @PathVariable("id") Long id) {
+        postService.updatePost(dto,id);
+        return ResponseEntity.ok().body("게시물이 업데이트 되었습니다.");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable("id") Long id){
+        postService.deletePost(id);
+        return ResponseEntity.ok().body("게시물이 삭제되었습니다.");
     }
 
 

@@ -53,7 +53,10 @@ public class PostEntity extends PostTime {
     @Column
     private Boolean isDel;
 
-
-
+    public PostEntity updatePost(String title, String content) {
+        this.title = title;
+        this.content = content;
+        return this;
+    }
 
 }
