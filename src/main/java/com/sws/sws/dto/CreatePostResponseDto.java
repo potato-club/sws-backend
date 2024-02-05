@@ -19,7 +19,7 @@ public class CreatePostResponseDto {
         this.id = postEntity.getId();
         this.title = postEntity.getTitle();
         this.content = postEntity.getContent();
-        this.userId = (postEntity.getUser() != null) ? postEntity.getUser().getUserId() : null;
+        this.userId = (postEntity.getUserEntity() != null) ? postEntity.getUserEntity().getUserId() : null;
         this.createdAt = postEntity.getCreatedAt();
         this.updatedAt = postEntity.getUpdatedAt();
     }

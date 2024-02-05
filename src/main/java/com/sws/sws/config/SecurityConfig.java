@@ -1,18 +1,34 @@
 package com.sws.sws.config;
 
-import lombok.RequiredArgsConstructor;
+
+import com.sws.sws.error.security.WebAccessDeniedHandler;
+import com.sws.sws.jwt.JwtAutheniticationTokenFilter;
+import com.sws.sws.jwt.JwtTokenProvider;
+import com.sws.sws.service.jwt.CustomUserDetailService;
+import com.sws.sws.service.jwt.RedisService;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
+
+
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
+
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@AllArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
@@ -20,28 +36,40 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    private final JwtAutheniticationTokenFilter jwtAutheniticationTokenFilter;
+    private final WebAccessDeniedHandler webAccessDeniedHandler;
+    private final CustomUserDetailService customUserDetailService;
+    private final RedisService redisService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .httpBasic().disable()
-                .csrf().disable()
-                .cors()
-                .and()
-                .headers().frameOptions().disable()
-                .and()
-                .formLogin().disable()
-                .authorizeRequests()
-                //권한 필요한 api들 여기에 넣기
-                .antMatchers("/user/signup", "/user/login").permitAll()
-                .anyRequest().permitAll()
-                .and()
-                .addFilterBefore(jwtAuthorizationTokenFilter, BasicAuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        //CSRF, CORS
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.cors(Customizer.withDefaults());
+        http.httpBasic(AbstractHttpConfigurer::disable);
 
-        return httpSecurity.build();
+        http.formLogin(AbstractHttpConfigurer::disable);
+        http.httpBasic(AbstractHttpConfigurer::disable);
+
+        http.authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/signup","/login","/").permitAll()
+                        .anyRequest().permitAll()
+
+        );
+
+
+
+        http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
+                SessionCreationPolicy.STATELESS));
+
+        http.addFilterBefore(new JwtAutheniticationTokenFilter(jwtTokenProvider, redisService), UsernamePasswordAuthenticationFilter.class);
+
+
+
+        return http.build();
     }
-
 
 
 }

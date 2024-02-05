@@ -30,7 +30,7 @@ public class PostService {
         PostEntity post = PostEntity.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
-                .user(user)
+                .userEntity(user)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();

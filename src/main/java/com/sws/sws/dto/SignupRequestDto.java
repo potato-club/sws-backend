@@ -1,10 +1,14 @@
 package com.sws.sws.dto;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class SignupRequestDto {
-    private String userEmail;
+    private String email;
     private String password;
     private String userName;
+    private String nickname;
+
+
+
 }

@@ -3,8 +3,6 @@ package com.sws.sws.error;
 
 import jakarta.servlet.http.HttpServletRequest;
 import com.sws.sws.error.exception.*;
-import org.apache.coyote.BadRequestException;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,12 +10,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ErrorExceptionControllerAdvice {
     @ExceptionHandler({BadRequestException.class})
-    public ResponseEntity<ErrorEntity> exceptionHandler(final BadRequestException e) {
+    public ResponseEntity<ErrorEntity> exceptionHandler(HttpServletRequest request, final BadRequestException e) {
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
                 .body(ErrorEntity.builder()
                         .errorCode(e.getErrorCode().getCode())
-                        .errorMessage(e.getMessage())
+                        .errorMessage(e.getErrorCode().getMessage())
                         .build());
     }
 
@@ -43,7 +41,7 @@ public class ErrorExceptionControllerAdvice {
 
 
 
-    @ExceptionHandler({ChangeSetPersister.NotFoundException.class})
+    @ExceptionHandler({NotFoundException.class})
     public ResponseEntity<ErrorEntity> exceptionHandler(HttpServletRequest request, final NotFoundException e) {
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
@@ -104,13 +102,15 @@ public class ErrorExceptionControllerAdvice {
                         .build());
     }
 
-    @ExceptionHandler({JwtExpiredException.class})
-    public ResponseEntity<ErrorEntity> exceptionHandler(HttpServletRequest request, final JwtExpiredException e) {
-        return ResponseEntity
-                .status(e.getErrorCode().getStatus())
-                .body(ErrorEntity.builder()
-                        .errorCode(e.getErrorCode().getCode())
-                        .errorMessage(e.getErrorCode().getMessage())
-                        .build());
-    }
+//    @ExceptionHandler({JwtExpiredException.class})
+//    public ResponseEntity<ErrorEntity> exceptionHandler(HttpServletRequest request, final JwtExpiredException e) {
+//        return ResponseEntity
+//                .status(e.getErrorCode().getStatus())
+//                .body(ErrorEntity.builder()
+//                        .errorCode(e.getErrorCode().getCode())
+//                        .errorMessage(e.getErrorCode().getMessage())
+//                        .build());
+//    }
+
+
 }
