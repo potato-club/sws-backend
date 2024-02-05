@@ -82,7 +82,12 @@ public class UserService {
         String RT = jwtTokenProvider.createRefreshToken(userEntity.getEmail(), userEntity.getUserRole());
 
 
+
+
         userEntity.setRefreshToken(RT);
+
+        response.setHeader("Authorization","Bearer " + AT);
+        response.setHeader("RefreshToken","Bearer "+ RT);
 
 
         return ResponseEntity.ok(new LoginResponseDto(true, "로그인 성공", AT, RT));
