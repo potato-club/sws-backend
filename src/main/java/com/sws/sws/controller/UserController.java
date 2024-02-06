@@ -18,7 +18,7 @@ public class UserController {
         this.userService = userService;
     }
 
-
+    //회원가입 api
     @PostMapping("/signup")
     public ResponseEntity<String> SignUp(@RequestBody SignupRequestDto requestDto, HttpServletResponse response) {
         userService.signUp(requestDto, response);
@@ -26,6 +26,7 @@ public class UserController {
     }
 
 
+    //로그인 api
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
     return userService.login(loginRequestDto, response);

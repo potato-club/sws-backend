@@ -49,10 +49,10 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(Customizer.withDefaults());
         http.httpBasic(AbstractHttpConfigurer::disable);
-
+        //폼로그인 disable
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
-
+        //자체 회원가입, 로그인 permitAll 설정
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/signup","/login","/").permitAll()
                         .anyRequest().permitAll()

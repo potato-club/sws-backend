@@ -60,21 +60,6 @@ public class PostEntity {
     @Column(nullable = false, unique = false)
     private Boolean isDel;
 
-//
-//    public PostEntity(CreatePostRequestDto createPostRequestDto, UserRepository userRepository) {
-//        this.title = createPostRequestDto.getTitle();
-//        this.content =createPostRequestDto.getContent();
-//        this.userEntity = userRepository.findById(createPostRequestDto.getUserId()).orElse(null);
-//
-//    }
-//
-//    public PostEntity(CreatePostResponseDto createPostResponseDto, UserRepository userRepository){
-//        this.title = createPostResponseDto.getTitle();
-//        this.content=createPostResponseDto.getContent();
-//        this.userEntity = userRepository.findById(createPostResponseDto.getUserId()).orElse(null);
-//        this.id = createPostResponseDto.getId();
-//        this.createdAt = createPostResponseDto.getCreatedAt();
-//        this.updatedAt = createPostResponseDto.getUpdatedAt();
-//    }
+
 
 }

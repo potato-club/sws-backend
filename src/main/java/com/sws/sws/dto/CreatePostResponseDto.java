@@ -15,6 +15,7 @@ public class CreatePostResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String content;
+
     public CreatePostResponseDto(PostEntity postEntity) {
         this.id = postEntity.getId();
         this.title = postEntity.getTitle();

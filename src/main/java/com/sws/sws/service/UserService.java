@@ -82,8 +82,6 @@ public class UserService {
         String RT = jwtTokenProvider.createRefreshToken(userEntity.getEmail(), userEntity.getUserRole());
 
 
-
-
         userEntity.setRefreshToken(RT);
 
         response.setHeader("Authorization","Bearer " + AT);

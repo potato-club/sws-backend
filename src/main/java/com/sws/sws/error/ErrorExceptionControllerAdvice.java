@@ -39,8 +39,6 @@ public class ErrorExceptionControllerAdvice {
                         .build());
     }
 
-
-
     @ExceptionHandler({NotFoundException.class})
     public ResponseEntity<ErrorEntity> exceptionHandler(HttpServletRequest request, final NotFoundException e) {
         return ResponseEntity

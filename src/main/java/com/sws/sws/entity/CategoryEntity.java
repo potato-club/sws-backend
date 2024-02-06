@@ -24,7 +24,7 @@ public class CategoryEntity {
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    @OnDelete(action = OnDeleteAction.CASCADE) // 부모 삭제시 자식도 삭제
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private CategoryEntity parent;
 
     @OneToMany(mappedBy = "parent")

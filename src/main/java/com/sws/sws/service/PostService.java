@@ -21,7 +21,6 @@ public class PostService {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
     }
-
     @Transactional
     public CreatePostResponseDto createPost(CreatePostRequestDto requestDto) {
         UserEntity user = userRepository.findById(requestDto.getUserId())
