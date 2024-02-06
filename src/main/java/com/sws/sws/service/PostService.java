@@ -49,10 +49,7 @@ public class PostService {
     }
 
     public Long createPost(RequestPostDto requestDto) {
-//        UserEntity user = userRepository.findById(requestDto.getUserId())
-//                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")); // 이건 나중에 memberService에서 저리해야할 부분입니다.
-
-        PostEntity post = PostEntity.builder()
+     PostEntity post = PostEntity.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
                 .build();

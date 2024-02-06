@@ -7,9 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+
 
 import java.util.List;
-
+@DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -19,12 +21,13 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="id")
     private Long userId;
 
     @OneToMany(mappedBy = "userEntity")
     private List<FriendsEntity> friends;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "userEntity")
     private List<PostEntity> posts;
 
     @OneToMany(mappedBy = "userEntity")
@@ -39,11 +42,11 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity")
     private List<UserTagEntity> userTags;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "user_name", nullable = false, unique = true)
     private String userName;
 
     @Column(nullable = false, unique = true)
-    private String userEmail;
+    private String email;
 
     @Column(nullable = false)
     private String password;
@@ -56,13 +59,20 @@ public class UserEntity {
     private UserRole userRole;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "level", nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'LEV1'")
     private Level level;
 
-    @Column(nullable = false, unique = false)
+
+    @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
     private Boolean isDel;
 
 
+    @Column(name = "refresh_token", columnDefinition = "VARCHAR(255) DEFAULT 'dummy'", nullable = false)
+    private String refreshToken;
+
+    public void setRefreshToken(String RT) {
+        this.refreshToken = RT;
+    }
 
 
 }

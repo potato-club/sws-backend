@@ -22,7 +22,7 @@ public class PostEntity extends PostTime {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    private UserEntity user;
+    private UserEntity userEntity;
 
     @OneToMany(mappedBy = "postEntity")
     private List<CommentEntity> comments;
@@ -53,10 +53,12 @@ public class PostEntity extends PostTime {
     @Column
     private Boolean isDel;
 
+
     public PostEntity updatePost(String title, String content) {
         this.title = title;
         this.content = content;
         return this;
     }
+
 
 }

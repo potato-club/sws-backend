@@ -22,6 +22,7 @@ public class CategoryEntity {
 
     private String name;
 
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
