@@ -1,6 +1,6 @@
 package com.sws.sws.service;
 
-import com.sws.sws.dto.LoginResponseDto;
+import com.sws.sws.dto.user.LoginResponseDto;
 import com.sws.sws.dto.user.LoginRequestDto;
 import com.sws.sws.dto.user.SignupRequestDto;
 import com.sws.sws.entity.UserEntity;
