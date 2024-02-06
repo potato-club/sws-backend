@@ -1,7 +1,7 @@
 package com.sws.sws.controller;
 
 
-import com.sws.sws.dto.LoginResponseDto;
+import com.sws.sws.dto.user.LoginResponseDto;
 
 import com.sws.sws.dto.user.LoginRequestDto;
 import com.sws.sws.dto.user.SignupRequestDto;
