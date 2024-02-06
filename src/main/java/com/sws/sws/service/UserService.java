@@ -1,8 +1,8 @@
 package com.sws.sws.service;
 
-import com.sws.sws.dto.LoginRequestDto;
 import com.sws.sws.dto.LoginResponseDto;
-import com.sws.sws.dto.SignupRequestDto;
+import com.sws.sws.dto.user.LoginRequestDto;
+import com.sws.sws.dto.user.SignupRequestDto;
 import com.sws.sws.entity.UserEntity;
 import com.sws.sws.enums.Level;
 import com.sws.sws.enums.UserRole;
@@ -111,3 +111,4 @@ public class UserService {
         return ResponseEntity.ok("good,check header");
     }
 }
+

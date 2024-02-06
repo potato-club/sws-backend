@@ -1,4 +1,4 @@
-package com.sws.sws.dto;
+package com.sws.sws.dto.user;
 
 import lombok.Data;
 

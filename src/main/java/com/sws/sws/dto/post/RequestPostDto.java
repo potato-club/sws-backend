@@ -1,11 +1,9 @@
-package com.sws.sws.dto;
+package com.sws.sws.dto.post;
 
 import lombok.Getter;
 
 @Getter
-public class CreatePostRequestDto {
+public class RequestPostDto {
     private String title;
     private String content;
-    private Long userId;
-
 }

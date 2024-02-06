@@ -1,8 +1,10 @@
 package com.sws.sws.controller;
 
-import com.sws.sws.dto.LoginRequestDto;
+
 import com.sws.sws.dto.LoginResponseDto;
-import com.sws.sws.dto.SignupRequestDto;
+
+import com.sws.sws.dto.user.LoginRequestDto;
+import com.sws.sws.dto.user.SignupRequestDto;
 import com.sws.sws.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

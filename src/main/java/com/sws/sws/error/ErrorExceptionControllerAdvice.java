@@ -19,6 +19,7 @@ public class ErrorExceptionControllerAdvice {
                         .build());
     }
 
+
     @ExceptionHandler({UnAuthorizedException.class})
     public ResponseEntity<ErrorEntity> exceptionHandler(HttpServletRequest request, final UnAuthorizedException e) {
         return ResponseEntity

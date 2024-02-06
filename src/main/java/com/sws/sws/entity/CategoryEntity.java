@@ -1,9 +1,7 @@
 package com.sws.sws.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -11,9 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@Setter
+@Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CategoryEntity {
 
     @Id
@@ -22,15 +22,14 @@ public class CategoryEntity {
 
     private String name;
 
+
     @ManyToOne
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "category_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private CategoryEntity parent;
+    private CategoryEntity category;
 
-    @OneToMany(mappedBy = "parent")
-    private final List<CategoryEntity> child = new ArrayList<>();
-
-    @OneToMany(mappedBy = "childCategory",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<PostEntity> posts = new ArrayList<>();
+
 
 }
