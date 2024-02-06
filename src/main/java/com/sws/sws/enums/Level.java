@@ -16,9 +16,5 @@ public enum Level {
     private final int minLikes;
     private final int maxLikes;
 
-    public static Level getDefault() {
-        return LEVEL1;
-    }
-
 
 }

@@ -89,28 +89,7 @@ public class JwtTokenProvider {
         return jwtParser.parseClaimsJws(token).getBody().getSubject();
     }
 
-    public String reissueAccessToken(String refreshToken) {
-        String email = redisService.getValues(refreshToken).get("email");
-        if (Objects.isNull(email)) {
-            throw new ForbiddenException("401", ErrorCode.ACCESS_DENIED_EXCEPTION);
-        }
 
-        return createAccessToken(email, userRepository.findByEmail(email).get().getUserRole());
-    }
-
-    public String reissueRefreshToken(String refreshToken) {
-        String email = redisService.getValues(refreshToken).get("email");
-        if (Objects.isNull(email)) {
-            throw new ForbiddenException("401", ErrorCode.ACCESS_DENIED_EXCEPTION);
-        }
-
-        String newRefreshToken = createRefreshToken(email, userRepository.findByEmail(email).get().getUserRole());
-
-        redisService.delValues(refreshToken);
-        redisService.setValues(newRefreshToken, email);
-
-        return newRefreshToken;
-    }
 
     // Request의 Header에서 AccessToken 값을 가져옵니다. "authorization" : "token"
     public String resolveAccessToken(HttpServletRequest request) {
@@ -162,26 +141,6 @@ public class JwtTokenProvider {
         } catch (SignatureException e) {
             throw new SignatureException("JWT signature does not match");
         }
-    }
-
-    // 어세스 토큰 헤더 설정
-    public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
-        response.setHeader("authorization", "bearer "+ accessToken);
-    }
-
-    // 리프레시 토큰 헤더 설정
-    public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
-        response.setHeader("refreshToken", "bearer "+ refreshToken);
-    }
-
-    // RefreshToken 존재유무 확인
-    public boolean existsRefreshToken(String refreshToken) {
-        return redisService.getValues(refreshToken) != null;
-    }
-
-    // Email로 권한 정보 가져오기
-    public UserRole getRoles(String email) {
-        return userRepository.findByEmail(email).get().getUserRole();
     }
 
 }
