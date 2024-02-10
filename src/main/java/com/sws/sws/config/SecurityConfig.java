@@ -2,7 +2,7 @@ package com.sws.sws.config;
 
 
 import com.sws.sws.error.security.WebAccessDeniedHandler;
-import com.sws.sws.jwt.JwtAutheniticationTokenFilter;
+import com.sws.sws.jwt.JwtAuthenticationTokenFilter;
 import com.sws.sws.jwt.JwtTokenProvider;
 import com.sws.sws.service.jwt.CustomUserDetailService;
 import com.sws.sws.service.jwt.RedisService;
@@ -36,7 +36,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    private final JwtAutheniticationTokenFilter jwtAutheniticationTokenFilter;
+    private final JwtAuthenticationTokenFilter jwtAutheniticationTokenFilter;
     private final WebAccessDeniedHandler webAccessDeniedHandler;
     private final CustomUserDetailService customUserDetailService;
     private final RedisService redisService;
@@ -64,7 +64,7 @@ public class SecurityConfig {
         http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
                 SessionCreationPolicy.STATELESS));
 
-        http.addFilterBefore(new JwtAutheniticationTokenFilter(jwtTokenProvider, redisService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationTokenFilter(jwtTokenProvider, redisService), UsernamePasswordAuthenticationFilter.class);
 
 
 
