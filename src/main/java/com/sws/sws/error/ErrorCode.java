@@ -17,6 +17,7 @@ public enum ErrorCode {
     EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "400", "duplicated email"),
     NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "404", "user not found"),
     POST_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "404", "post not found"),
+    CATEGORY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "404", "category not found"),
     JWT_EXPIRED_EXCEPTION(HttpStatus.UNAUTHORIZED, "401_Invalid", "JWT token has expired");
 
 

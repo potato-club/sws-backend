@@ -2,6 +2,7 @@ package com.sws.sws.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,11 +13,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class CommentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String content;
 
     @ManyToOne
     @JoinColumn(name="user_id")
@@ -29,13 +34,10 @@ public class CommentEntity {
     @OneToMany(mappedBy = "commentEntity")
     private List<LikeEntity> likes;
 
-    @Column(nullable = false, unique = false)
-    private String content;
-
-    @Column(nullable = false, unique = false)
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, unique = false)
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @Column(nullable = false, unique = false)

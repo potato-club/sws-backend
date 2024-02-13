@@ -31,16 +31,17 @@ public class UserController {
     //로그인 api
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-    return userService.login(loginRequestDto, response);
-}
+        return userService.login(loginRequestDto, response);
+    }
 
     @GetMapping("/refresh")
     public ResponseEntity<String> refreshAT(HttpServletRequest request, HttpServletResponse response) {
-        return userService.refreshAccessToken(request,response);
+        return userService.refreshAccessToken(request, response);
     }
 
     //로그아웃 api
-    @PostMapping("/logout") public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
         token = token.substring(7);
 
         userService.logout(token);

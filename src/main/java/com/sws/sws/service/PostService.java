@@ -4,9 +4,12 @@ import com.sws.sws.dto.post.RequestPostDto;
 import com.sws.sws.dto.post.RequestUpdatePostDto;
 import com.sws.sws.dto.post.ResponsePostDto;
 import com.sws.sws.dto.post.ResponsePostListDto;
+import com.sws.sws.entity.CategoryEntity;
 import com.sws.sws.entity.PostEntity;
 import com.sws.sws.error.ErrorCode;
+import com.sws.sws.error.exception.CategoryNotFoundException;
 import com.sws.sws.error.exception.PostNotFoundException;
+import com.sws.sws.repository.CategoryRepository;
 import com.sws.sws.repository.PostRepository;
 import com.sws.sws.utils.ResponseValue;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final CategoryRepository categoryRepository;
 
     public ResponsePostListDto findAllPost() {
 
@@ -49,10 +53,17 @@ public class PostService {
     }
 
     public Long createPost(RequestPostDto requestDto) {
-     PostEntity post = PostEntity.builder()
+
+        CategoryEntity category = categoryRepository.findByName(requestDto.getCategory())
+                .orElseThrow(() -> new CategoryNotFoundException("카테고리가 존재하지 않습니다.", ErrorCode.CATEGORY_NOT_FOUND_EXCEPTION));
+
+
+        PostEntity post = PostEntity.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
+                .category(category)
                 .build();
+
         PostEntity savedPost = postRepository.save(post); // 게시물 저장하고
 
         return savedPost.getId(); // 게시물 id값 반환
@@ -72,9 +83,14 @@ public class PostService {
     public void deletePost(Long id) {
 
         PostEntity originPost = postRepository.findById(id).
-                orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.",ErrorCode.POST_NOT_FOUND_EXCEPTION));
+                orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
 
         postRepository.deleteById(id);
+    }
+
+    public PostEntity getPostId(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
     }
 
 
