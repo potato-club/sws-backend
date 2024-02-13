@@ -3,14 +3,13 @@ package com.sws.sws.service.jwt;
 import com.sws.sws.error.ErrorCode;
 
 import com.sws.sws.error.exception.InvalidTokenException;
-import com.sws.sws.error.exception.NotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.util.HashMap;
+
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -20,14 +19,6 @@ public class RedisService {
 
     private final RedisTemplate redisTemplate;
 
-
-    // RefreshToken, email, IP Address 설정
-    public void setValues(String token, String email) {
-        ValueOperations<String, Object> operations = redisTemplate.opsForValue();
-        Map<String, String> map = new HashMap<>();
-        map.put("email", email);
-        operations.set(token, map, Duration.ofDays(7)); // 7일 뒤 메모리에서 삭제됨
-    }
 
     // 키값으로 벨류 가져오기
     public Map<String, String> getValues(String token){
@@ -60,38 +51,6 @@ public class RedisService {
         valueOperations.set(token, true, expiration, TimeUnit.MILLISECONDS);
     }
 
-    // RefreshToken, email, IP Address 삭제
-    public void delValues(String token) {
-        redisTemplate.delete(token);
-    }
 
-    // key를 통해 Email OTP value 리턴
-    public String getEmailOtpData(String key) {
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        String value = valueOperations.get(key);
-        if (value == null) {
-            throw new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION, "Email OTP not found for key: " + key);
-        }
-        return value;
-    }
-
-    // 유효 시간 동안 Email OTP(key, value) 저장
-    public void setEmailOtpDataExpire(String key, String value, long duration) {
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        Duration expireDuration = Duration.ofSeconds(duration);
-        valueOperations.set(key, value, expireDuration);
-    }
-
-    // Email OTP 값 삭제
-    public void deleteEmailOtpData(String key) {
-        redisTemplate.delete(key);
-    }
-
-    // 기존의 OTP 코드가 있는지 확인하고 있다면 삭제
-    public void deleteExistingOtp(String email) {
-        if (redisTemplate.hasKey(email)) {
-            redisTemplate.delete(email);
-        }
-    }
 
 }

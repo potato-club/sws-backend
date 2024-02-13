@@ -1,10 +1,8 @@
 package com.sws.sws.config;
 
 
-import com.sws.sws.error.security.WebAccessDeniedHandler;
 import com.sws.sws.jwt.JwtAuthenticationTokenFilter;
 import com.sws.sws.jwt.JwtTokenProvider;
-import com.sws.sws.service.jwt.CustomUserDetailService;
 import com.sws.sws.service.jwt.RedisService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -36,9 +34,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    private final JwtAuthenticationTokenFilter jwtAutheniticationTokenFilter;
-    private final WebAccessDeniedHandler webAccessDeniedHandler;
-    private final CustomUserDetailService customUserDetailService;
     private final RedisService redisService;
     private final JwtTokenProvider jwtTokenProvider;
 
