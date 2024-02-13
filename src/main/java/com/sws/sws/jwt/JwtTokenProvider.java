@@ -1,15 +1,11 @@
 package com.sws.sws.jwt;
 import com.sws.sws.enums.UserRole;
-import com.sws.sws.error.ErrorCode;
-import com.sws.sws.error.exception.ForbiddenException;
-import com.sws.sws.repository.UserRepository;
 import com.sws.sws.service.jwt.CustomUserDetailService;
 import com.sws.sws.service.jwt.RedisService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,14 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class JwtTokenProvider {
-    private final UserRepository userRepository;
     private final RedisService  redisService;
     private final CustomUserDetailService customUserDetailService;
 
