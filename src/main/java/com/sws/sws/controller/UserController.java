@@ -39,4 +39,13 @@ public class UserController {
         return userService.refreshAccessToken(request,response);
     }
 
+    //로그아웃 api
+    @PostMapping("/logout") public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        token = token.substring(7);
+
+        userService.logout(token);
+
+        return ResponseEntity.ok("로그아웃 되었습니다.");
+    }
+
 }

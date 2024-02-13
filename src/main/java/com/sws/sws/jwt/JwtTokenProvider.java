@@ -1,10 +1,6 @@
 package com.sws.sws.jwt;
 import com.sws.sws.enums.UserRole;
-import com.sws.sws.error.ErrorCode;
-import com.sws.sws.error.exception.ForbiddenException;
-import com.sws.sws.repository.UserRepository;
 import com.sws.sws.service.jwt.CustomUserDetailService;
-import com.sws.sws.service.jwt.RedisService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -21,15 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class JwtTokenProvider {
-    private final UserRepository userRepository;
-    private final RedisService  redisService;
+
+
     private final CustomUserDetailService customUserDetailService;
 
     @Value("${jwt.secretKey}")
@@ -105,21 +100,6 @@ public class JwtTokenProvider {
         return null;
     }
 
-    // Expire Token
-    public void expireToken(String token) {
-        Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        Date expiration = claims.getExpiration();
-        Date now = new Date();
-        if (now.after(expiration)) {
-            redisService.addTokenToBlacklist(token, expiration.getTime() - now.getTime());
-        }
-    }
-
     // 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {
         try {
@@ -138,9 +118,16 @@ public class JwtTokenProvider {
             throw new UnsupportedJwtException("JWT token is unsupported");
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("JWT claims string is empty");
-        } catch (SignatureException e) {
-            throw new SignatureException("JWT signature does not match");
         }
     }
+
+    //토큰 헤더 설정
+    public void setHeaderAT(HttpServletResponse response, String accessToken) {
+        response.setHeader("authorization", "bearer "+ accessToken);
+    }
+    public void setHeaderRT(HttpServletResponse response, String refreshToken) {
+        response.setHeader("refreshToken", "bearer "+ refreshToken);
+    }
+
 
 }
