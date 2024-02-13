@@ -1,6 +1,7 @@
 package com.sws.sws.entity;
 
 import com.sws.sws.enums.PostTime;
+import com.sws.sws.enums.TagName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,10 +34,12 @@ public class PostEntity extends PostTime {
     @OneToMany(mappedBy = "postEntity")
     private List<FileEntity> files;
 
-    @OneToMany(mappedBy = "postEntity")
-    private List<PostTagEntity> postTags;
+    @ElementCollection(targetClass = TagName.class)
+    @Enumerated(EnumType.STRING)
+    private List<TagName> postTags;
 
     @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity category;
 
     @Column(nullable = false, unique = false)
@@ -45,11 +48,9 @@ public class PostEntity extends PostTime {
     @Column(nullable = false, unique = false)
     private String content;
 
-//    @Column(nullable = false, unique = false)
     @Column
     private int views;
 
-//    @Column(nullable = false, unique = false)
     @Column
     private Boolean isDel;
 

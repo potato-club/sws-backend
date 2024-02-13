@@ -1,6 +1,7 @@
 package com.sws.sws.entity;
 
 import com.sws.sws.enums.Level;
+import com.sws.sws.enums.TagName;
 import com.sws.sws.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,24 +25,6 @@ public class UserEntity {
     @Column(name ="id")
     private Long userId;
 
-    @OneToMany(mappedBy = "userEntity")
-    private List<FriendsEntity> friends;
-
-    @OneToMany(mappedBy = "userEntity")
-    private List<PostEntity> posts;
-
-    @OneToMany(mappedBy = "userEntity")
-    private List<CommentEntity> comments;
-
-    @OneToMany(mappedBy = "userEntity")
-    private List<LikeEntity> likes;
-
-    @OneToMany(mappedBy = "userEntity")
-    private List<LocationEntity> locations;
-
-    @OneToMany(mappedBy = "userEntity")
-    private List<UserTagEntity> userTags;
-
     @Column(name = "user_name", nullable = false, unique = true)
     private String userName;
 
@@ -54,20 +37,36 @@ public class UserEntity {
     @Column(nullable = false, unique = true)
     private String nickname;
 
+    @OneToMany(mappedBy = "userEntity")
+    private List<FriendsEntity> friends;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<PostEntity> posts;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<CommentEntity> comments;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<LikeEntity> likes;
+
+//    @OneToMany(mappedBy = "userEntity")
+//    private List<LocationEntity> locations;
+
+    @ElementCollection(targetClass = TagName.class)
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    private List<TagName> userTags;
+
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "level", nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'LEV1'")
     private Level level;
 
-
     @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
     private Boolean isDel;
 
-
-    @Column(name = "refresh_token", columnDefinition = "VARCHAR(255) DEFAULT 'dummy'", nullable = false)
+    @Column(name = "refresh_token", columnDefinition = "VARCHAR(255) DEFAULT 'dummy'", nullable = false) // 여기다두면안됨
     private String refreshToken;
 
     public void setRefreshToken(String RT) {

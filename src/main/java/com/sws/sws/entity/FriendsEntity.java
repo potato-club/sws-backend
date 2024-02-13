@@ -20,12 +20,6 @@ public class FriendsEntity {
     private UserEntity userEntity;
 
     @Column(nullable = false, unique = true)
-    private String friendName;
-
-    @Column(nullable = false, unique = true)
-    private String friendNickname;
-
-    @Column(nullable = false, unique = true)
     private Boolean isFriend;
 
     @Column(nullable = false, unique = false)

@@ -1,5 +1,6 @@
 package com.sws.sws.entity;
 
+import com.sws.sws.enums.CategoryName;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -9,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Setter
 @Builder
 @Getter
 @NoArgsConstructor
@@ -18,18 +18,15 @@ public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Column(name = "category_id")
     private Long id;
 
-    private String name;
-
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private CategoryEntity category;
+    @Enumerated(EnumType.STRING)
+    private CategoryName name;
 
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<PostEntity> posts = new ArrayList<>();
+    private List<PostEntity> posts = new ArrayList<>();
 
 
 }
