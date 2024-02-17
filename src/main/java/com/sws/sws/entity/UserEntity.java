@@ -69,9 +69,6 @@ public class UserEntity {
     @Column(name = "refresh_token", columnDefinition = "VARCHAR(255) DEFAULT 'dummy'", nullable = false) // 여기다두면안됨
     private String refreshToken;
 
-    public void setRefreshToken(String RT) {
-        this.refreshToken = RT;
-    }
 
 
 }
