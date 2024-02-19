@@ -1,18 +1,11 @@
 package com.sws.sws.dto.user;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class LoginResponseDto {
-    private boolean success;
-    private String message;
-    private String accessToken;
-    private String refreshToken;
+    private String responseCode;
 
-    public LoginResponseDto(boolean success, String message, String accessToken, String refreshToken) {
-        this.success = success;
-        this.message = message;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }
 }

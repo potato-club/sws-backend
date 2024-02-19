@@ -1,6 +1,8 @@
 package com.sws.sws.jwt;
 import com.sws.sws.enums.UserRole;
+import com.sws.sws.repository.UserRepository;
 import com.sws.sws.service.jwt.CustomUserDetailService;
+import com.sws.sws.service.jwt.RedisService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -26,6 +28,9 @@ public class JwtTokenProvider {
 
 
     private final CustomUserDetailService customUserDetailService;
+    private final UserRepository userRepository;
+    private final RedisService redisService;
+
 
     @Value("${jwt.secretKey}")
     private String secretKey;
@@ -69,6 +74,20 @@ public class JwtTokenProvider {
                 .compact(); // 생성
     }
 
+    public void expireToken(String token) {
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        Date expiration = claims.getExpiration();
+        Date now = new Date();
+        if (now.after(expiration)) {
+            redisService.addTokenToBlacklist(token, expiration.getTime() - now.getTime());
+        }
+    }
+
     // JWT 토큰에서 인증 정보 조회
     public UsernamePasswordAuthenticationToken getAuthentication(String token) {
         UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getEmail(token));
@@ -85,17 +104,16 @@ public class JwtTokenProvider {
     }
 
 
-
     // Request의 Header에서 AccessToken 값을 가져옵니다. "authorization" : "token"
     public String resolveAccessToken(HttpServletRequest request) {
-        if (request.getHeader("authorization") != null )
+        if (request.getHeader("authorization") != null)
             return request.getHeader("authorization").substring(7);
         return null;
     }
 
     // Request의 Header에서 RefreshToken 값을 가져옵니다. "refreshToken" : "token"
     public String resolveRefreshToken(HttpServletRequest request) {
-        if (request.getHeader("refreshToken") != null )
+        if (request.getHeader("refreshToken") != null)
             return request.getHeader("refreshToken").substring(7);
         return null;
     }
@@ -123,11 +141,32 @@ public class JwtTokenProvider {
 
     //토큰 헤더 설정
     public void setHeaderAT(HttpServletResponse response, String accessToken) {
-        response.setHeader("authorization", "bearer "+ accessToken);
+        response.setHeader("authorization", "bearer " + accessToken);
     }
+
     public void setHeaderRT(HttpServletResponse response, String refreshToken) {
-        response.setHeader("refreshToken", "bearer "+ refreshToken);
+        response.setHeader("refreshToken", "bearer " + refreshToken);
     }
 
+    public String extractTokenType(String token) {
+        Claims claims = extractClaims(token);
+        if (claims != null && claims.containsKey("type")) {
+            return (String) claims.get("type");
+        } else {
+            throw new UnsupportedJwtException("JWT 토큰이 타입이 없습니다.");
+        }
+    }
 
+    private Claims extractClaims(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey.getBytes())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (IllegalArgumentException e) {
+            throw new UnsupportedJwtException("토큰 타입을 추출할 수 없습니다.");
+        }
+
+    }
 }

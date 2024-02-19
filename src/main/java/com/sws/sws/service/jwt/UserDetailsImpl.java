@@ -13,20 +13,11 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
+
     private final UserEntity userEntity;
-    @Override
-    @Transactional
-//    사용자 권한 처리
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<String> userRole = new ArrayList<>();
-        userRole.add(userEntity.getUserRole().toString());
-        String authority = userRole.toString();
 
-        SimpleGrantedAuthority simpleAuthority = new SimpleGrantedAuthority(authority);
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(simpleAuthority);
-
-        return authorities;
+    public UserEntity getUser() {
+        return userEntity;
     }
 
     @Override
@@ -36,7 +27,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userEntity.getUserName();
+        return userEntity.getNickname();
     }
 
     @Override
@@ -57,5 +48,19 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    @Transactional
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<String> userRole = new ArrayList<>();
+        userRole.add(userEntity.getUserRole().toString());
+        String authority = userRole.get(0);
+
+        SimpleGrantedAuthority simpleAuthority = new SimpleGrantedAuthority(authority);
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(simpleAuthority);
+
+        return authorities;
     }
 }

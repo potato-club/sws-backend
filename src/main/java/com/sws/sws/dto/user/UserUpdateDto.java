@@ -6,4 +6,5 @@ import lombok.Data;
 public class UserUpdateDto {
     private String userName;
     private String nickName;
+
 }

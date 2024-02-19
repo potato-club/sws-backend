@@ -10,6 +10,8 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 
+import java.time.Duration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +22,13 @@ public class RedisService {
     private final RedisTemplate redisTemplate;
 
 
-    // 키값으로 벨류 가져오기
+    public void setValues(String token, String email) {
+        ValueOperations<String, Object> operations = redisTemplate.opsForValue();
+        Map<String, String> map = new HashMap<>();
+        map.put("email", email);
+        operations.set(token, map, Duration.ofDays(7));
+    }
+
     public Map<String, String> getValues(String token){
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
         Object object = operations.get(token);
@@ -51,6 +59,9 @@ public class RedisService {
         valueOperations.set(token, true, expiration, TimeUnit.MILLISECONDS);
     }
 
+    public void delValues(String token) {
+        redisTemplate.delete(token);
+    }
 
 
 }
