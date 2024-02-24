@@ -1,5 +1,7 @@
 package com.sws.sws.jwt;
 import com.sws.sws.enums.UserRole;
+import com.sws.sws.error.ErrorCode;
+import com.sws.sws.error.exception.ForbiddenException;
 import com.sws.sws.repository.UserRepository;
 import com.sws.sws.service.jwt.CustomUserDetailService;
 import com.sws.sws.service.jwt.RedisService;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -50,18 +53,19 @@ public class JwtTokenProvider {
 
     // Access Token 생성.
     public String createAccessToken(String email, UserRole userRole) {
-        return this.createToken(email, userRole, accessTokenValidTime);
+        return this.createToken(email, userRole, accessTokenValidTime, "ACCESS");
     }
 
     // Refresh Token 생성.
     public String createRefreshToken(String email, UserRole userRole) {
-        return this.createToken(email, userRole, refreshTokenValidTime);
+        return this.createToken(email, userRole, refreshTokenValidTime, "REFRESH");
     }
 
     // Create token
-    public String createToken(String email, UserRole userRole, long tokenValid) {
+    public String createToken(String email, UserRole userRole, long tokenValid, String tokenType) {
         Claims claims = Jwts.claims().setSubject(email); // claims 생성 및 payload 설정
         claims.put("roles", userRole.toString()); // 권한 설정, key/ value 쌍으로 저장
+        claims.put("type", tokenType);
 
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
         Date date = new Date();
@@ -104,14 +108,12 @@ public class JwtTokenProvider {
     }
 
 
-    // Request의 Header에서 AccessToken 값을 가져옵니다. "authorization" : "token"
     public String resolveAccessToken(HttpServletRequest request) {
         if (request.getHeader("authorization") != null)
             return request.getHeader("authorization").substring(7);
         return null;
     }
 
-    // Request의 Header에서 RefreshToken 값을 가져옵니다. "refreshToken" : "token"
     public String resolveRefreshToken(HttpServletRequest request) {
         if (request.getHeader("refreshToken") != null)
             return request.getHeader("refreshToken").substring(7);
@@ -169,4 +171,36 @@ public class JwtTokenProvider {
         }
 
     }
+
+    public String reissueAccessToken(String refreshToken) {
+        String email = redisService.getValues(refreshToken).get("email");
+        if (Objects.isNull(email)) {
+            throw new ForbiddenException("401", ErrorCode.ACCESS_DENIED_EXCEPTION);
+        }
+
+        return createAccessToken(email, userRepository.findByEmail(email).get().getUserRole());
+    }
+
+    public String reissueRefreshToken(String refreshToken) {
+        String email = redisService.getValues(refreshToken).get("email");
+        if (Objects.isNull(email)) {
+            throw new ForbiddenException("401", ErrorCode.ACCESS_DENIED_EXCEPTION);
+        }
+
+        String newRefreshToken = createRefreshToken(email, userRepository.findByEmail(email).get().getUserRole());
+
+        redisService.delValues(refreshToken);
+        redisService.setValues(newRefreshToken, email);
+
+        return newRefreshToken;
+    }
+
+    public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
+        response.setHeader("authorization", "bearer "+ accessToken);
+    }
+
+    public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
+        response.setHeader("refreshToken", "bearer "+ refreshToken);
+    }
+
 }
