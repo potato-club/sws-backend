@@ -33,7 +33,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String ipAddress = request.getRemoteAddr();
 
 
-        if (path.contains("/users/login") || path.contains("/users/signup"))  {
+        if (path.contains("/login") || path.contains("/signup"))  {
             filterChain.doFilter(request, response);
             return;
         }
