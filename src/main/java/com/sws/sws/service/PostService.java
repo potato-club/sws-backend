@@ -6,12 +6,15 @@ import com.sws.sws.dto.post.ResponsePostDto;
 import com.sws.sws.dto.post.ResponsePostListDto;
 import com.sws.sws.entity.CategoryEntity;
 import com.sws.sws.entity.PostEntity;
+import com.sws.sws.entity.UserEntity;
 import com.sws.sws.error.ErrorCode;
 import com.sws.sws.error.exception.CategoryNotFoundException;
 import com.sws.sws.error.exception.PostNotFoundException;
+import com.sws.sws.error.exception.UnAuthorizedException;
 import com.sws.sws.repository.CategoryRepository;
 import com.sws.sws.repository.PostRepository;
 import com.sws.sws.utils.ResponseValue;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +32,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
+    private final UserService userService;
 
     public ResponsePostListDto findAllPost() {
 
@@ -52,39 +57,58 @@ public class PostService {
         }
     }
 
-    public Long createPost(RequestPostDto requestDto) {
+    public Long createPost(RequestPostDto requestDto, HttpServletRequest request) {
 
-        CategoryEntity category = categoryRepository.findByName(requestDto.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException("카테고리가 존재하지 않습니다.", ErrorCode.CATEGORY_NOT_FOUND_EXCEPTION));
+        Optional<UserEntity> user = userService.findByUserToken(request);
+        if(user.get().getUserRole() == null) {
+            throw new UnAuthorizedException("로그인후 이용해주세요.", ErrorCode.NOT_ALLOW_WRITE_EXCEPTION);
+        } else {
+            CategoryEntity category = categoryRepository.findByName(requestDto.getCategory())
+                    .orElseThrow(() -> new CategoryNotFoundException("카테고리가 존재하지 않습니다.", ErrorCode.CATEGORY_NOT_FOUND_EXCEPTION));
 
-        PostEntity post = PostEntity.builder()
-                .title(requestDto.getTitle())
-                .content(requestDto.getContent())
-                .category(category)
-                .build();
+            PostEntity post = PostEntity.builder()
+                    .title(requestDto.getTitle())
+                    .userEntity(user.get())
+                    .content(requestDto.getContent())
+                    .category(category)
+                    .build();
 
-        PostEntity savedPost = postRepository.save(post); // 게시물 저장하고
+            PostEntity savedPost = postRepository.save(post); // 게시물 저장하고
 
-        return savedPost.getId(); // 게시물 id값 반환
+            return savedPost.getId(); // 게시물 id값 반환
+        }
     }
 
-    public Long updatePost(RequestUpdatePostDto updatePostDto, Long id) {
-        PostEntity originPost = postRepository.findById(id).
-                orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
+    public Long updatePost(RequestUpdatePostDto updatePostDto, Long id, HttpServletRequest request) {
 
-        String updatedTitle = updatePostDto.getTitle();
-        String updatedContent = updatePostDto.getContent();
+        Optional<UserEntity> user = userService.findByUserToken(request);
+        if(user.get().getUserRole() == null) {
+            throw new UnAuthorizedException("로그인후 이용해주세요.", ErrorCode.NOT_ALLOW_WRITE_EXCEPTION);
+        } else {
 
-        originPost.updatePost(updatedTitle, updatedContent);
-        return postRepository.save(originPost).getId();
+            PostEntity originPost = postRepository.findById(id).
+                    orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
+
+            String updatedTitle = updatePostDto.getTitle();
+            String updatedContent = updatePostDto.getContent();
+
+            originPost.updatePost(updatedTitle, updatedContent);
+            return postRepository.save(originPost).getId();
+        }
     }
 
-    public void deletePost(Long id) {
+    public void deletePost(Long id, HttpServletRequest request) {
 
-        PostEntity originPost = postRepository.findById(id).
-                orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
+        Optional<UserEntity> user = userService.findByUserToken(request);
+        if(user.get().getUserRole() == null) {
+            throw new UnAuthorizedException("로그인후 이용해주세요.", ErrorCode.NOT_ALLOW_WRITE_EXCEPTION);
+        } else {
 
-        postRepository.deleteById(id);
+            PostEntity originPost = postRepository.findById(id).
+                    orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
+
+            postRepository.deleteById(originPost.getId());
+        }
     }
 
     public PostEntity getPostId(Long postId) {
