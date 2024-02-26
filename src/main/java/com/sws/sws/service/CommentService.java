@@ -5,6 +5,8 @@ import com.sws.sws.dto.comment.CommentResponseDto;
 import com.sws.sws.entity.CommentEntity;
 import com.sws.sws.entity.PostEntity;
 import com.sws.sws.entity.UserEntity;
+import com.sws.sws.error.ErrorCode;
+import com.sws.sws.error.exception.UnAuthorizedException;
 import com.sws.sws.repository.CommentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +27,18 @@ public class CommentService {
     public CommentResponseDto createComment(Long postId, CommentRequestDto dto, HttpServletRequest request) {
 
         Optional<UserEntity> user = userService.findByUserToken(request);
-        PostEntity post = postService.getPostId(postId);
+        if (user.get().getUserRole() == null) {
+            throw new UnAuthorizedException("로그인후 이용해주세요.", ErrorCode.NOT_ALLOW_WRITE_EXCEPTION);
+        } else {
+            PostEntity post = postService.getPostId(postId);
 
-        CommentEntity comment = CommentEntity.builder()
-                .content(dto.getComment())
-                .postEntity(post)
-                .userEntity(user.get())
-                .build();
-        CommentEntity save = commentRepository.save(comment);
-        return new CommentResponseDto(save);
+            CommentEntity comment = CommentEntity.builder()
+                    .content(dto.getComment())
+                    .postEntity(post)
+                    .userEntity(user.get())
+                    .build();
+            CommentEntity save = commentRepository.save(comment);
+            return new CommentResponseDto(save);
+        }
     }
 }
