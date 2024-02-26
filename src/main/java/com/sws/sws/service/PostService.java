@@ -57,7 +57,6 @@ public class PostService {
         CategoryEntity category = categoryRepository.findByName(requestDto.getCategory())
                 .orElseThrow(() -> new CategoryNotFoundException("카테고리가 존재하지 않습니다.", ErrorCode.CATEGORY_NOT_FOUND_EXCEPTION));
 
-
         PostEntity post = PostEntity.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())

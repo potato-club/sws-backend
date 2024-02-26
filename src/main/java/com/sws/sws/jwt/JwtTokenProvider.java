@@ -53,12 +53,12 @@ public class JwtTokenProvider {
 
     // Access Token 생성.
     public String createAccessToken(String email, UserRole userRole) {
-        return this.createToken(email, userRole, accessTokenValidTime, "ACCESS");
+        return this.createToken(email, userRole, accessTokenValidTime, "access");
     }
 
     // Refresh Token 생성.
     public String createRefreshToken(String email, UserRole userRole) {
-        return this.createToken(email, userRole, refreshTokenValidTime, "REFRESH");
+        return this.createToken(email, userRole, refreshTokenValidTime, "refresh");
     }
 
     // Create token

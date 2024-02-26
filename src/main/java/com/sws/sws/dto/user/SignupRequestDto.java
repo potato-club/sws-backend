@@ -15,6 +15,7 @@ public class SignupRequestDto {
 
     private String nickname;
 
+    private UserRole userRole;
 
     public UserEntity toEntity() {
 
@@ -23,7 +24,7 @@ public class SignupRequestDto {
                 .password(password)
                 .userName(userName)
                 .nickname(nickname)
-                .userRole(UserRole.USER)
+                .userRole(userRole)
                 .build();
     }
 

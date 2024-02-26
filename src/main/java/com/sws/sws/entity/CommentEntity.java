@@ -1,5 +1,6 @@
 package com.sws.sws.entity;
 
+import com.sws.sws.enums.PostTime;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Builder
-public class CommentEntity {
+public class CommentEntity extends PostTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,27 +25,19 @@ public class CommentEntity {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
     @ManyToOne
-    @JoinColumn(name="post_id")
+    @JoinColumn(name = "post_id")
     private PostEntity postEntity;
 
     @OneToMany(mappedBy = "commentEntity")
     private List<LikeEntity> likes;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
-    @Column(nullable = false, unique = false)
+    //    @Column(nullable = false) // 추후 추가
+    @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")
     private Boolean isDel;
-
-
-
 
 
 }
