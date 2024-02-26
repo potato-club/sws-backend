@@ -24,6 +24,12 @@ public class CommentService {
     private final PostService postService;
     private final UserService userService;
 
+    public CommentResponseDto findAllCommentByPost() {
+        return CommentResponseDto.builder()
+                .userName()
+                .content() // 추후 프로필 사진 추가
+    }
+
     public CommentResponseDto createComment(Long postId, CommentRequestDto dto, HttpServletRequest request) {
 
         Optional<UserEntity> user = userService.findByUserToken(request);

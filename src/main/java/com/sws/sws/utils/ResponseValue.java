@@ -13,6 +13,7 @@ public class ResponseValue {
                     .id(postEntity.getId())
                     .title(postEntity.getTitle())
                     .content(postEntity.getContent())
+                    .userName(postEntity.getUserEntity().getUserName())
                     .createdAt(postEntity.getCreatedAt())
                     .updatedAt(postEntity.getUpdatedAt())
                     .build();

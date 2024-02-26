@@ -68,6 +68,7 @@ public class PostService {
 
             PostEntity post = PostEntity.builder()
                     .title(requestDto.getTitle())
+                    .userEntity(user.get())
                     .content(requestDto.getContent())
                     .category(category)
                     .build();
