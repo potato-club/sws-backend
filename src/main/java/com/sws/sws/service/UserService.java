@@ -1,8 +1,6 @@
 package com.sws.sws.service;
 
-import com.sws.sws.dto.user.LoginResponseDto;
-import com.sws.sws.dto.user.LoginRequestDto;
-import com.sws.sws.dto.user.SignupRequestDto;
+import com.sws.sws.dto.user.*;
 import com.sws.sws.entity.UserEntity;
 import com.sws.sws.enums.UserRole;
 import com.sws.sws.error.ErrorCode;
@@ -14,8 +12,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import java.util.Optional;
 
@@ -31,8 +31,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisService redisService;
-
-
 
 
     public void signUp(SignupRequestDto requestDto) {
@@ -81,16 +79,54 @@ public class UserService {
         redisService.setValues(refreshToken, email);
     }
 
+
     public Optional<UserEntity> findByUserToken(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveAccessToken(request);
         String accessTokenType = jwtTokenProvider.extractTokenType(token);
 
-        if("refresh".equals(accessTokenType)) {
+        if ("refresh".equals(accessTokenType)) {
             throw new UnAuthorizedException("RefreshToken은 사용할 수 없습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
         }
 
         return token == null ? null : userRepository.findByEmail(jwtTokenProvider.getEmail(token));
     }
 
+    //사용자 정보 조회
+    public InfoResponseDto getUserInfo(HttpServletRequest request) {
+        Optional<UserEntity> userEntity = findByUserToken(request);
+        if (!userEntity.isPresent()) {
+            throw new UsernameNotFoundException("User not found.");
+        }
 
-}
+        UserEntity user = userEntity.get();
+        return new InfoResponseDto(user.getUserName(), user.getNickname(), user.getLevel());
+    }
+
+    //사용자 정보 수정
+    public void updateUser(InfoUpdateRequestDto requestDto, HttpServletRequest request) {
+        UserEntity user = findUserByToken(request);
+        if (requestDto.getUserName() != null && !requestDto.getUserName().isEmpty()
+                && requestDto.getNickname() != null && !requestDto.getNickname().isEmpty()) {
+            // UserEntity의 update 메소드를 호출하여 사용자 정보를 업데이트합니다.
+            user.update(requestDto);
+        }
+    }
+
+
+    public void reissueToken (HttpServletRequest request, HttpServletResponse response){
+            String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+
+            String newAccessToken = jwtTokenProvider.reissueAccessToken(refreshToken);
+            String newRefreshToken = jwtTokenProvider.reissueRefreshToken(refreshToken);
+
+            jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
+            jwtTokenProvider.setHeaderRefreshToken(response, newRefreshToken);
+        }
+
+    public UserEntity findUserByToken(HttpServletRequest request) {
+            String token = jwtTokenProvider.resolveAccessToken(request);
+            return token == null ? null : userRepository.
+                    findByEmail(jwtTokenProvider.getEmail(token)).orElseThrow();
+        }
+
+    }
