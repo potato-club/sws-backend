@@ -4,6 +4,7 @@ import com.sws.sws.dto.post.RequestPostDto;
 import com.sws.sws.dto.post.RequestUpdatePostDto;
 import com.sws.sws.dto.post.ResponsePostListDto;
 import com.sws.sws.service.PostService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,8 @@ public class PostController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> createPost(@RequestBody RequestPostDto dto) {
-        postService.createPost(dto);
+    public ResponseEntity<String> createPost(@RequestBody RequestPostDto dto, HttpServletRequest request) {
+        postService.createPost(dto, request);
         return ResponseEntity.ok().body("게시물이 생성되었습니다.");
     }
 
