@@ -78,15 +78,22 @@ public class PostService {
         }
     }
 
-    public Long updatePost(RequestUpdatePostDto updatePostDto, Long id) {
-        PostEntity originPost = postRepository.findById(id).
-                orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
+    public Long updatePost(RequestUpdatePostDto updatePostDto, Long id, HttpServletRequest request) {
 
-        String updatedTitle = updatePostDto.getTitle();
-        String updatedContent = updatePostDto.getContent();
+        Optional<UserEntity> user = userService.findByUserToken(request);
+        if(user.get().getUserRole() == null) {
+            throw new UnAuthorizedException("로그인후 이용해주세요.", ErrorCode.NOT_ALLOW_WRITE_EXCEPTION);
+        } else {
 
-        originPost.updatePost(updatedTitle, updatedContent);
-        return postRepository.save(originPost).getId();
+            PostEntity originPost = postRepository.findById(id).
+                    orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
+
+            String updatedTitle = updatePostDto.getTitle();
+            String updatedContent = updatePostDto.getContent();
+
+            originPost.updatePost(updatedTitle, updatedContent);
+            return postRepository.save(originPost).getId();
+        }
     }
 
     public void deletePost(Long id) {

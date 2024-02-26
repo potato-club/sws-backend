@@ -29,13 +29,13 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updatePost(@RequestBody RequestUpdatePostDto dto, @PathVariable("id") Long id) {
-        postService.updatePost(dto,id);
+    public ResponseEntity<String> updatePost(@RequestBody RequestUpdatePostDto dto, @PathVariable("id") Long id, HttpServletRequest request) {
+        postService.updatePost(dto, id, request);
         return ResponseEntity.ok().body("게시물이 업데이트 되었습니다.");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable("id") Long id){
+    public ResponseEntity<String> deletePost(@PathVariable("id") Long id) {
         postService.deletePost(id);
         return ResponseEntity.ok().body("게시물이 삭제되었습니다.");
     }
