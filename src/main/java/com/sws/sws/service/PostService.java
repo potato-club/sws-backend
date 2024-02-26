@@ -96,12 +96,18 @@ public class PostService {
         }
     }
 
-    public void deletePost(Long id) {
+    public void deletePost(Long id, HttpServletRequest request) {
 
-        PostEntity originPost = postRepository.findById(id).
-                orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
+        Optional<UserEntity> user = userService.findByUserToken(request);
+        if(user.get().getUserRole() == null) {
+            throw new UnAuthorizedException("로그인후 이용해주세요.", ErrorCode.NOT_ALLOW_WRITE_EXCEPTION);
+        } else {
 
-        postRepository.deleteById(id);
+            PostEntity originPost = postRepository.findById(id).
+                    orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
+
+            postRepository.deleteById(originPost.getId());
+        }
     }
 
     public PostEntity getPostId(Long postId) {

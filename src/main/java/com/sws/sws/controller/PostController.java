@@ -35,8 +35,8 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable("id") Long id) {
-        postService.deletePost(id);
+    public ResponseEntity<String> deletePost(@PathVariable("id") Long id, HttpServletRequest request) {
+        postService.deletePost(id, request);
         return ResponseEntity.ok().body("게시물이 삭제되었습니다.");
     }
 
