@@ -50,18 +50,19 @@ public class JwtTokenProvider {
 
     // Access Token 생성.
     public String createAccessToken(String email, UserRole userRole) {
-        return this.createToken(email, userRole, accessTokenValidTime);
+        return this.createToken(email, userRole, accessTokenValidTime, "access");
     }
 
     // Refresh Token 생성.
     public String createRefreshToken(String email, UserRole userRole) {
-        return this.createToken(email, userRole, refreshTokenValidTime);
+        return this.createToken(email, userRole, refreshTokenValidTime, "refresh");
     }
 
     // Create token
-    public String createToken(String email, UserRole userRole, long tokenValid) {
+    public String createToken(String email, UserRole userRole, long tokenValid, String tokenType) {
         Claims claims = Jwts.claims().setSubject(email); // claims 생성 및 payload 설정
         claims.put("roles", userRole.toString()); // 권한 설정, key/ value 쌍으로 저장
+        claims.put("type", tokenType);
 
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
         Date date = new Date();

@@ -57,13 +57,16 @@ public class UserEntity {
     private List<TagName> userTags;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UserRole userRole;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "level", nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'LEV1'")
+    @Enumerated(EnumType.STRING) // not null 걸려서 일단 뺴두겠음
+//    @Column(name = "level", nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'LEV1'")
+    @Column(name = "level", columnDefinition = "VARCHAR(10) DEFAULT 'LEV1'")
     private Level level;
 
-    @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
+//    @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
+    @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")
     private Boolean isDel;
 
     @Column(name = "refresh_token", columnDefinition = "VARCHAR(255) DEFAULT 'dummy'", nullable = false) // 여기다두면안됨

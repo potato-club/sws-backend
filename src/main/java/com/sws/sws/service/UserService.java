@@ -35,7 +35,7 @@ public class UserService {
 
 
 
-    public void signUp(SignupRequestDto requestDto, HttpServletResponse response) {
+    public void signUp(SignupRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new UnAuthorizedException("401", ACCESS_DENIED_EXCEPTION);
         }

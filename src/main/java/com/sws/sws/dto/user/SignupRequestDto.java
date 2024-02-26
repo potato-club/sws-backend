@@ -1,6 +1,7 @@
 package com.sws.sws.dto.user;
 
 import com.sws.sws.entity.UserEntity;
+import com.sws.sws.enums.UserRole;
 import lombok.Data;
 
 @Data
@@ -14,6 +15,8 @@ public class SignupRequestDto {
 
     private String nickname;
 
+    private UserRole userRole;
+
     public UserEntity toEntity() {
 
         return UserEntity.builder()
@@ -21,6 +24,7 @@ public class SignupRequestDto {
                 .password(password)
                 .userName(userName)
                 .nickname(nickname)
+                .userRole(userRole)
                 .build();
     }
 

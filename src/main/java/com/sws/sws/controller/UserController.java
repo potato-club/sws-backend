@@ -8,22 +8,20 @@ import com.sws.sws.dto.user.SignupRequestDto;
 import com.sws.sws.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     //회원가입 api
     @PostMapping("/signup")
-    public ResponseEntity<String> SignUp(@RequestBody SignupRequestDto requestDto, HttpServletResponse response) {
-        userService.signUp(requestDto, response);
+    public ResponseEntity<String> signUp(@RequestBody SignupRequestDto requestDto) {
+        userService.signUp(requestDto);
         return ResponseEntity.ok("회원가입 완료");
     }
 
