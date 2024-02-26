@@ -10,13 +10,17 @@ import com.sws.sws.error.exception.NotFoundException;
 import com.sws.sws.error.exception.UnAuthorizedException;
 import com.sws.sws.repository.CommentRepository;
 import com.sws.sws.repository.UserRepository;
+import com.sws.sws.utils.ResponseValue;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,9 +31,15 @@ public class CommentService {
     private final PostService postService;
     private final UserService userService;
 
-//    public CommentResponseDto findAllCommentByPost() {
-//        List<CommentResponseDto> collect =
-//    }
+    public List<CommentResponseDto> findAllCommentByPost(Long lastCommentId, int size) {
+        PageRequest pageRequest = PageRequest.of(0,size);
+        Page<CommentEntity> entityPage = commentRepository.findByIdLessThanOrderByIdDesc(lastCommentId, pageRequest);
+        List<CommentEntity> commentEntityList = entityPage.getContent();
+
+        return commentEntityList.stream()
+                .map(ResponseValue::getAllBuild)
+                .collect(Collectors.toList());
+    }
 
     public CommentResponseDto createComment(Long postId, CommentRequestDto dto, HttpServletRequest request) {
 

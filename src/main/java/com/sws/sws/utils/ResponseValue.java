@@ -29,6 +29,7 @@ public class ResponseValue {
             return CommentResponseDto.builder()
                     .id(commentEntity.getId())
                     .content(commentEntity.getContent())
+                    .postId(commentEntity.getPostEntity().getId())
                     .createdAt(commentEntity.getCreatedAt())
                     .userName(commentEntity.getUserEntity().getUserName())
                     .build();

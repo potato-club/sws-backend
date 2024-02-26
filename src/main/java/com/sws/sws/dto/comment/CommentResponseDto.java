@@ -18,6 +18,7 @@ public class CommentResponseDto {
     private String userName;
     private String content;
     private LocalDateTime createdAt;
+    private Long postId;
 
     public CommentResponseDto(CommentEntity comment) {
         this.userName = comment.getUserEntity().getUserName();
