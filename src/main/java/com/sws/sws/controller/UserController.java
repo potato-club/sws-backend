@@ -47,7 +47,7 @@ public class UserController {
     }
 
     //사용자 정보 수정 api
-    @PostMapping("/update")
+    @PostMapping("/update")  // api 이름 고민해보자
     public ResponseEntity<String> updateUser(@RequestBody InfoUpdateRequestDto requestDto, HttpServletRequest request) {
         try {
             userService.updateUser(requestDto, request);
@@ -57,7 +57,6 @@ public class UserController {
         }
     }
 
-
     //토큰 재발급 api
     @GetMapping("/reissue")
     public ResponseEntity<String> reissueToken(HttpServletRequest request, HttpServletResponse response) {
@@ -65,7 +64,7 @@ public class UserController {
         return ResponseEntity.ok("토큰 재발급이 완료되었습니다");
     }
 
-    @GetMapping("/check")
+    @GetMapping("/check") // 추후 수정
     public ResponseEntity<String> validateToken() {
         return ResponseEntity.ok("Accessed Token");
     }

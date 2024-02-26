@@ -79,18 +79,6 @@ public class UserService {
         redisService.setValues(refreshToken, email);
     }
 
-
-    public Optional<UserEntity> findByUserToken(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveAccessToken(request);
-        String accessTokenType = jwtTokenProvider.extractTokenType(token);
-
-        if ("refresh".equals(accessTokenType)) {
-            throw new UnAuthorizedException("RefreshToken은 사용할 수 없습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
-        }
-
-        return token == null ? null : userRepository.findByEmail(jwtTokenProvider.getEmail(token));
-    }
-
     //사용자 정보 조회
     public InfoResponseDto getUserInfo(HttpServletRequest request) {
         Optional<UserEntity> userEntity = findByUserToken(request);
@@ -104,29 +92,36 @@ public class UserService {
 
     //사용자 정보 수정
     public void updateUser(InfoUpdateRequestDto requestDto, HttpServletRequest request) {
-        UserEntity user = findUserByToken(request);
-        if (requestDto.getUserName() != null && !requestDto.getUserName().isEmpty()
-                && requestDto.getNickname() != null && !requestDto.getNickname().isEmpty()) {
-            // UserEntity의 update 메소드를 호출하여 사용자 정보를 업데이트합니다.
-            user.update(requestDto);
-        }
+        Optional<UserEntity> userOptional = findByUserToken(request);
+        userOptional.ifPresent(user -> {
+            if (requestDto.getUserName() != null && !requestDto.getUserName().isEmpty()
+                    && requestDto.getNickname() != null && !requestDto.getNickname().isEmpty()) {
+                // UserEntity의 update 메소드를 호출하여 사용자 정보를 업데이트합니다.
+                user.update(requestDto);
+            }
+        });
     }
 
 
-    public void reissueToken (HttpServletRequest request, HttpServletResponse response){
-            String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+    public void reissueToken(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
 
-            String newAccessToken = jwtTokenProvider.reissueAccessToken(refreshToken);
-            String newRefreshToken = jwtTokenProvider.reissueRefreshToken(refreshToken);
+        String newAccessToken = jwtTokenProvider.reissueAccessToken(refreshToken);
+        String newRefreshToken = jwtTokenProvider.reissueRefreshToken(refreshToken);
 
-            jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
-            jwtTokenProvider.setHeaderRefreshToken(response, newRefreshToken);
-        }
-
-    public UserEntity findUserByToken(HttpServletRequest request) {
-            String token = jwtTokenProvider.resolveAccessToken(request);
-            return token == null ? null : userRepository.
-                    findByEmail(jwtTokenProvider.getEmail(token)).orElseThrow();
-        }
-
+        jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
+        jwtTokenProvider.setHeaderRefreshToken(response, newRefreshToken);
     }
+
+    public Optional<UserEntity> findByUserToken(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveAccessToken(request);
+        String accessTokenType = jwtTokenProvider.extractTokenType(token);
+
+        if ("refresh".equals(accessTokenType)) {
+            throw new UnAuthorizedException("RefreshToken은 사용할 수 없습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
+        }
+
+        return token == null ? null : userRepository.findByEmail(jwtTokenProvider.getEmail(token));
+    }
+
+}
