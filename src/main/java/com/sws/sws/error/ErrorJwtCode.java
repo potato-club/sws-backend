@@ -2,6 +2,7 @@ package com.sws.sws.error;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
@@ -12,6 +13,7 @@ public enum ErrorJwtCode {
     EMPTY_JWT_CLAIMS(4004, "JWT claims string is empty"),
     JWT_SIGNATURE_MISMATCH(4005, "JWT signature does not match"),
     JWT_COMPLEX_ERROR(4006, "JWT Complex error");
+
 
     private final int code;
     private final String message;

@@ -33,7 +33,7 @@ public class UserController {
 
 
     //로그아웃 api
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         userService.logout(request);
         return ResponseEntity.ok("로그아웃되었습니다.");
@@ -67,6 +67,13 @@ public class UserController {
     @GetMapping("/check") // 추후 수정
     public ResponseEntity<String> validateToken() {
         return ResponseEntity.ok("Accessed Token");
+    }
+
+
+    @PostMapping("/leave")
+    public ResponseEntity<?> leave(HttpServletRequest request) {
+        userService.leave(request);
+        return ResponseEntity.ok().body("탈퇴 처리되었습니다.");
     }
 
 
