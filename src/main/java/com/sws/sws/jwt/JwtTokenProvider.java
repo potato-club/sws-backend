@@ -2,6 +2,7 @@ package com.sws.sws.jwt;
 import com.sws.sws.enums.UserRole;
 import com.sws.sws.error.ErrorCode;
 import com.sws.sws.error.exception.ForbiddenException;
+import com.sws.sws.error.exception.InvalidTokenException;
 import com.sws.sws.repository.UserRepository;
 import com.sws.sws.service.jwt.CustomUserDetailService;
 import com.sws.sws.service.jwt.RedisService;
@@ -88,9 +89,10 @@ public class JwtTokenProvider {
         Date expiration = claims.getExpiration();
         Date now = new Date();
         if (now.after(expiration)) {
-            redisService.addTokenToBlacklist(token, expiration.getTime() - now.getTime());
+            redisService.addTokenToBlacklist(token);
         }
     }
+
 
     // JWT 토큰에서 인증 정보 조회
     public UsernamePasswordAuthenticationToken getAuthentication(String token) {
@@ -123,6 +125,10 @@ public class JwtTokenProvider {
     // 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {
         try {
+            if (redisService.isTokenInBlacklist(jwtToken)) {
+                log.info("JWT token is in blacklist");
+                throw new InvalidTokenException("401_Invalid", ErrorCode.INVALID_TOKEN_EXCEPTION);
+            }
             Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
             Jws<Claims> claims = Jwts.parserBuilder()
                     .setSigningKey(key)

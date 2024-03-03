@@ -70,8 +70,23 @@ public class UserService {
 
 
     public void logout(HttpServletRequest request) {
-        redisService.delValues(jwtTokenProvider.resolveRefreshToken(request));
-        jwtTokenProvider.expireToken(jwtTokenProvider.resolveAccessToken(request));
+        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+
+
+        if (refreshToken != null) {
+            redisService.delValues(refreshToken);
+        } else {
+
+            System.out.println("Refresh token is null.");
+        }
+
+        String accessToken = jwtTokenProvider.resolveAccessToken(request);
+        if (accessToken != null) {
+            // 수정된 메소드 호출
+            redisService.addTokenToBlacklist(accessToken);
+        } else {
+            System.out.println("Access token is null.");
+        }
     }
 
 
@@ -129,27 +144,21 @@ public class UserService {
         jwtTokenProvider.setHeaderRefreshToken(response, newRefreshToken);
     }
 
-    public Optional<UserEntity> findByUserToken(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveAccessToken(request);
-        String accessTokenType = jwtTokenProvider.extractTokenType(token);
+    //탈퇴
+    @Transactional
+    public void leave(HttpServletRequest request) {
 
-        if ("refresh".equals(accessTokenType)) {
-            throw new UnAuthorizedException("RefreshToken은 사용할 수 없습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.resolveAccessToken(request));
+        Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
+
+        // 사용자 정보가 존재하지 않는 경우 예외 처리
+        if (!userEntityOptional.isPresent()) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
         }
 
-        return token == null ? null : userRepository.findByEmail(jwtTokenProvider.getEmail(token));
-    }
+        // 사용자 데이터베이스에서 완전히 삭제
+        userRepository.delete(userEntityOptional.get());
 
-    //탈퇴
-    public void leave(HttpServletRequest request) {
-        String email = jwtTokenProvider.getEmail(jwtTokenProvider.resolveAccessToken(request));
-
-        UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-        // 사용자 탈퇴 처리
-        userEntity.leave();
-        userRepository.save(userEntity);
 
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
         if (refreshToken != null && !refreshToken.isEmpty()) {
@@ -163,5 +172,18 @@ public class UserService {
 
 
     }
+
+
+    public Optional<UserEntity> findByUserToken(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveAccessToken(request);
+        String accessTokenType = jwtTokenProvider.extractTokenType(token);
+
+        if ("refresh".equals(accessTokenType)) {
+            throw new UnAuthorizedException("RefreshToken은 사용할 수 없습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
+        }
+
+        return token == null ? null : userRepository.findByEmail(jwtTokenProvider.getEmail(token));
+    }
+
 
 }

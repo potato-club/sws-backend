@@ -33,7 +33,7 @@ public class UserController {
 
 
     //로그아웃 api
-    @GetMapping("/logout")
+    @GetMapping("user/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         userService.logout(request);
         return ResponseEntity.ok("로그아웃되었습니다.");
