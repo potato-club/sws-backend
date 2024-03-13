@@ -70,9 +70,11 @@ public class UserEntity {
         this.nickname = userDto.getNickname();
     }
 
-    public void leave() {
-        this.isDel = true;
+
+    public void setIsDel(boolean deleted) {
+        this.isDel = deleted;
     }
+
 
     //    @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
     @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")

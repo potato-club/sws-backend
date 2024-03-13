@@ -49,7 +49,7 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
         //자체 회원가입, 로그인 permitAll 설정
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/signup","/login","/user","/").permitAll() // 싹다  all? 음?
+                        .requestMatchers("/signup","/login","/reissue").permitAll() // 싹다  all? 음?
                         .anyRequest().permitAll()
 
         );

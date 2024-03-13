@@ -13,7 +13,8 @@ public enum ErrorJwtCode {
     EMPTY_JWT_CLAIMS(4004, "JWT claims string is empty"),
     JWT_SIGNATURE_MISMATCH(4005, "JWT signature does not match"),
     JWT_COMPLEX_ERROR(4006, "JWT Complex error"),
-    JWT_COMPLEX_ERROR_2(4007, "JWT Complex error");
+    REFRESH_TOKEN_EXPIRED(4007, "refrehToken is expired"),
+    ACCESS_TOKEN_EXPIRED(4008, "accessToken is expired");
 
 
     private final int code;

@@ -68,26 +68,11 @@ public class UserService {
                 .build();
     }
 
-
     public void logout(HttpServletRequest request) {
-        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
-
-
-        if (refreshToken != null) {
-            redisService.delValues(refreshToken);
-        } else {
-
-            System.out.println("Refresh token is null.");
-        }
-
-        String accessToken = jwtTokenProvider.resolveAccessToken(request);
-        if (accessToken != null) {
-            // 수정된 메소드 호출
-            redisService.addTokenToBlacklist(accessToken);
-        } else {
-            System.out.println("Access token is null.");
-        }
+        redisService.delValues(jwtTokenProvider.resolveRefreshToken(request));
+        jwtTokenProvider.expireToken(jwtTokenProvider.resolveAccessToken(request));
     }
+
 
 
     public void setJwtTokenInHeader(String email, HttpServletResponse response) {
@@ -104,14 +89,20 @@ public class UserService {
     }
 
     //사용자 정보 조회
-    public InfoResponseDto getUserInfo(HttpServletRequest request) {
+    public MyPageDto viewMyPage(HttpServletRequest request) {
         Optional<UserEntity> userEntity = findByUserToken(request);
         if (!userEntity.isPresent()) {
             throw new UnAuthorizedException("404", NOT_FOUND_EXCEPTION);
         }
 
         UserEntity user = userEntity.get();
-        return new InfoResponseDto(user.getUserName(), user.getNickname(), user.getLevel());
+        return MyPageDto.builder()
+                .email(user.getEmail())
+                .userName(user.getUserName())
+                .nickname(user.getNickname())
+                .userRole(user.getUserRole())
+                .level(user.getLevel())
+                .build();
     }
 
     //사용자 정보 수정
@@ -130,25 +121,31 @@ public class UserService {
     public void reissueToken(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
 
-        String accessToken = jwtTokenProvider.resolveAccessToken(request);
-
-        // 액세스 토큰이 요청에 포함되어 있는지 확인
-        if (accessToken != null && !accessToken.isEmpty()) {
-            throw new UnAuthorizedException("AccessToken은 사용할 수 없습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
-        }
-
         String newAccessToken = jwtTokenProvider.reissueAccessToken(refreshToken);
         String newRefreshToken = jwtTokenProvider.reissueRefreshToken(refreshToken);
 
-        jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
-        jwtTokenProvider.setHeaderRefreshToken(response, newRefreshToken);
+        jwtTokenProvider.setHeaderAT(response, newAccessToken);
+        jwtTokenProvider.setHeaderRT(response, newRefreshToken);
     }
 
     //탈퇴
-    @Transactional
     public void leave(HttpServletRequest request) {
+        Optional<UserEntity> user = findByUserToken(request);
 
-        String email = jwtTokenProvider.getEmail(jwtTokenProvider.resolveAccessToken(request));
+        if (user.isPresent()) {
+            UserEntity userEntity = user.get();
+            userEntity.setIsDel(true);
+            this.logout(request);
+        } else {
+            throw new UnAuthorizedException("404", NOT_FOUND_EXCEPTION);
+        }
+    }
+
+    //db에서 완전히 삭제하는 탈퇴
+    @Transactional
+    public void delUser(HttpServletRequest request) {
+
+        String email = jwtTokenProvider.getUserEmail(jwtTokenProvider.resolveAccessToken(request));
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
 
         // 사용자 정보가 존재하지 않는 경우 예외 처리
@@ -174,6 +171,7 @@ public class UserService {
     }
 
 
+
     public Optional<UserEntity> findByUserToken(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveAccessToken(request);
         String accessTokenType = jwtTokenProvider.extractTokenType(token);
@@ -182,8 +180,10 @@ public class UserService {
             throw new UnAuthorizedException("RefreshToken은 사용할 수 없습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
         }
 
-        return token == null ? null : userRepository.findByEmail(jwtTokenProvider.getEmail(token));
+        return token == null ? null : userRepository.findByEmail(jwtTokenProvider.getUserEmail(token));
     }
 
 
+
 }
+

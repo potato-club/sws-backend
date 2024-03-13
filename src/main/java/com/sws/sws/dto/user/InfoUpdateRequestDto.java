@@ -9,6 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class InfoUpdateRequestDto {
 
+    private String email;
     private String userName;
     private String nickname;
 
