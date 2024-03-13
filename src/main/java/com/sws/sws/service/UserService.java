@@ -106,7 +106,7 @@ public class UserService {
     }
 
     //사용자 정보 수정
-    public void updateUser(InfoUpdateRequestDto requestDto, HttpServletRequest request) {
+    public void updateUser(MyPageDto requestDto, HttpServletRequest request) {
         Optional<UserEntity> userOptional = findByUserToken(request);
         userOptional.ifPresent(user -> {
             if (requestDto.getUserName() != null && !requestDto.getUserName().isEmpty()

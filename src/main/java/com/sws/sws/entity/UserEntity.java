@@ -1,6 +1,7 @@
 package com.sws.sws.entity;
 
-import com.sws.sws.dto.user.InfoUpdateRequestDto;
+
+import com.sws.sws.dto.user.MyPageDto;
 import com.sws.sws.enums.Level;
 import com.sws.sws.enums.TagName;
 import com.sws.sws.enums.UserRole;
@@ -65,9 +66,12 @@ public class UserEntity {
 
 
 
-    public void update(InfoUpdateRequestDto userDto) {
-        this.userName = userDto.getUserName();
-        this.nickname = userDto.getNickname();
+    public void update(MyPageDto myPageDto) {
+        this.email = myPageDto.getEmail();
+        this.userName = myPageDto.getUserName();
+        this.nickname = myPageDto.getNickname();
+        this.level = myPageDto.getLevel();
+        this.userRole = myPageDto.getUserRole();
     }
 
 
