@@ -56,20 +56,27 @@ public class UserEntity {
     private List<TagName> userTags;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "userRole", nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'USER'")
     private UserRole userRole;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "level", nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'LEV1'")
     private Level level;
 
-    //    @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
-    @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")
-    private Boolean isDel;
+
 
     public void update(InfoUpdateRequestDto userDto) {
         this.userName = userDto.getUserName();
         this.nickname = userDto.getNickname();
     }
+
+    public void leave() {
+        this.isDel = true;
+    }
+
+    //    @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
+    @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")
+    private Boolean isDel;
 
 
 }

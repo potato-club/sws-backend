@@ -21,6 +21,10 @@ public enum ErrorCode {
     JWT_EXPIRED_EXCEPTION(HttpStatus.UNAUTHORIZED, "401_Invalid", "JWT token has expired");
 
 
+
+
+
+
     private final HttpStatus status;
     private final String code;
     private final String message;

@@ -61,7 +61,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             setResponse(response, errorCode);
             return;
         } catch (ExpiredJwtException e) {
-            errorCode = ErrorJwtCode.JWT_TOKEN_EXPIRED;
+            if (accessToken != null) {
+                errorCode = ErrorJwtCode.JWT_COMPLEX_ERROR_2;
+            } else {
+                errorCode = ErrorJwtCode.JWT_TOKEN_EXPIRED;
+            }
             setResponse(response, errorCode);
             return;
         } catch (UnsupportedJwtException e) {
@@ -85,6 +89,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
 
     private void setResponse(HttpServletResponse response, ErrorJwtCode errorCode) throws IOException {
         JSONObject json = new JSONObject();
