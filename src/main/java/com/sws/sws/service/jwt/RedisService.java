@@ -5,7 +5,6 @@ import com.sws.sws.error.ErrorCode;
 import com.sws.sws.error.exception.InvalidTokenException;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -21,10 +20,6 @@ import java.util.concurrent.TimeUnit;
 public class RedisService {
 
     private final RedisTemplate redisTemplate;
-
-    @Value("${security.token.blacklistExpiration}")
-    private long blacklistExpiration;
-
 
     public void setValues(String token, String email) {
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
@@ -52,16 +47,19 @@ public class RedisService {
     }
 
     public boolean isTokenInBlacklist(String token) {
-        return redisTemplate.hasKey(token);
+        if (redisTemplate.hasKey(token)) {
+            throw new InvalidTokenException("401_Invalid", ErrorCode.INVALID_TOKEN_EXCEPTION);
+        }
+        return false;
     }
 
-    public void addTokenToBlacklist(String token) {
+    public void addTokenToBlacklist(String token, long expiration) {
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(token, true, blacklistExpiration, TimeUnit.MILLISECONDS);
+        valueOperations.set(token, true, expiration, TimeUnit.MILLISECONDS);
     }
+
     public void delValues(String token) {
         redisTemplate.delete(token);
     }
-
 
 }

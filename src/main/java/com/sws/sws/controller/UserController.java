@@ -40,15 +40,15 @@ public class UserController {
     }
 
     //사용자 정보 조회 api
-    @GetMapping("/info")
-    public ResponseEntity<InfoResponseDto> getUserInfo(HttpServletRequest request) {
-        InfoResponseDto userInfo = userService.getUserInfo(request);
+    @GetMapping("/mypage")
+    public ResponseEntity<MyPageDto> getUserInfo(HttpServletRequest request) {
+        MyPageDto userInfo = userService.viewMyPage(request);
         return ResponseEntity.ok(userInfo);
     }
 
     //사용자 정보 수정 api
-    @PostMapping("/update")  // api 이름 고민해보자
-    public ResponseEntity<String> updateUser(@RequestBody InfoUpdateRequestDto requestDto, HttpServletRequest request) {
+    @PostMapping("/updateUser")
+    public ResponseEntity<String> updateUser(@RequestBody MyPageDto requestDto, HttpServletRequest request) {
         try {
             userService.updateUser(requestDto, request);
             return new ResponseEntity<>("정보 수정 완료", HttpStatus.OK);
@@ -64,16 +64,17 @@ public class UserController {
         return ResponseEntity.ok("토큰 재발급이 완료되었습니다");
     }
 
-    @GetMapping("/check") // 추후 수정
-    public ResponseEntity<String> validateToken() {
-        return ResponseEntity.ok("Accessed Token");
-    }
-
 
     @PostMapping("/leave")
     public ResponseEntity<?> leave(HttpServletRequest request) {
         userService.leave(request);
         return ResponseEntity.ok().body("탈퇴 처리되었습니다.");
+    }
+
+    @PostMapping("/delUser")
+    public ResponseEntity<?> delUser(HttpServletRequest request) {
+        userService.delUser(request);
+        return ResponseEntity.ok().body("영구 탈퇴 처리되었습니다.");
     }
 
 
