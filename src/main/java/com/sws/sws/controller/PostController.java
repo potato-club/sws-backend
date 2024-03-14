@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
 
     private final PostService postService;
-
+    // 게시물 조회시 어떻게 조회할껀지 물어보고 로직 추가하기 02/27 이후 추가 사항
     @GetMapping
     public ResponsePostListDto findAll() {
         ResponsePostListDto all = postService.findAllPost();
