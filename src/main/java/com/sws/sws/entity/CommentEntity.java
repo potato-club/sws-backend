@@ -32,8 +32,8 @@ public class CommentEntity extends PostTime {
     @JoinColumn(name = "post_id")
     private PostEntity postEntity;
 
-    @OneToMany(mappedBy = "commentEntity")
-    private List<LikeEntity> likes;
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int likes;
 
     //    @Column(nullable = false) // 추후 추가
     @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")
@@ -42,6 +42,14 @@ public class CommentEntity extends PostTime {
     public CommentEntity updateComment(String content) {
         this.content = content;
         return this;
+    }
+
+    public int increaseLikesNums() {
+        return this.likes += 1;
+    }
+
+    public int decreaseLikesNums() {
+        return this.likes -= 1;
     }
 
 

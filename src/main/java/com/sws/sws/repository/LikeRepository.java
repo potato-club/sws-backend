@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
-    LikeEntity findByUserAndPost(UserEntity user, PostEntity post);
-    LikeEntity findByUserAndComment(UserEntity user, CommentEntity comment);
+    LikeEntity findByUserEntityAndPostEntity(UserEntity user, PostEntity post);
+    LikeEntity findByUserEntityAndCommentEntity(UserEntity user, CommentEntity comment);
 
 
 }
