@@ -28,8 +28,11 @@ public class PostEntity extends PostTime {
     @OneToMany(mappedBy = "postEntity")
     private List<CommentEntity> comments;
 
-    @OneToMany(mappedBy = "postEntity")
-    private List<LikeEntity> likes;
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int likes;
+
+    @Column(columnDefinition = "integer default 0", nullable = false) // 기본 조회수는 0
+    private int views;
 
     @OneToMany(mappedBy = "postEntity")
     private List<FileEntity> files;
@@ -47,9 +50,6 @@ public class PostEntity extends PostTime {
 
     @Column(nullable = false, unique = false)
     private String content;
-
-    @Column
-    private int views;
 
     @Column
     private Boolean isDel;
