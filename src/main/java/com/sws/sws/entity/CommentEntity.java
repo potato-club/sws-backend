@@ -39,5 +39,10 @@ public class CommentEntity extends PostTime {
     @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")
     private Boolean isDel;
 
+    public CommentEntity updateComment(String content) {
+        this.content = content;
+        return this;
+    }
+
 
 }

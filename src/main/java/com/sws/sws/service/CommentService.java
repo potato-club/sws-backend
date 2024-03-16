@@ -6,6 +6,7 @@ import com.sws.sws.entity.CommentEntity;
 import com.sws.sws.entity.PostEntity;
 import com.sws.sws.entity.UserEntity;
 import com.sws.sws.error.ErrorCode;
+import com.sws.sws.error.exception.BadRequestException;
 import com.sws.sws.error.exception.NotFoundException;
 import com.sws.sws.error.exception.UnAuthorizedException;
 import com.sws.sws.repository.CommentRepository;
@@ -60,6 +61,22 @@ public class CommentService {
                     .build();
             CommentEntity save = commentRepository.save(comment);
             return new CommentResponseDto(save);
+        }
+    }
+
+    public Long updateComment(Long commentId, CommentRequestDto dto, HttpServletRequest request) {
+
+        Optional<UserEntity> user = userService.findByUserToken(request);
+        if(user.get().getUserRole() == null) {
+            throw new UnAuthorizedException("로그인후 이용해주세요.", ErrorCode.NOT_ALLOW_WRITE_EXCEPTION);
+        } else {
+            CommentEntity comment = commentRepository.findById(commentId).
+                    orElseThrow(() -> new BadRequestException("댓글이 존재하지 않습니다.", ErrorCode.NOT_FOUND_EXCEPTION));
+
+            String updateContent = dto.getComment();
+            comment.updateComment(updateContent);
+
+            return commentRepository.save(comment).getId();
         }
     }
 
