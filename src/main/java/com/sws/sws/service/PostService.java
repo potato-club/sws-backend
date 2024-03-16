@@ -1,13 +1,11 @@
 package com.sws.sws.service;
 
-import com.sws.sws.dto.post.RequestPostDto;
-import com.sws.sws.dto.post.RequestUpdatePostDto;
-import com.sws.sws.dto.post.ResponsePostDto;
-import com.sws.sws.dto.post.ResponsePostListDto;
+import com.sws.sws.dto.post.*;
 import com.sws.sws.entity.CategoryEntity;
 import com.sws.sws.entity.PostEntity;
 import com.sws.sws.entity.UserEntity;
 import com.sws.sws.error.ErrorCode;
+import com.sws.sws.error.exception.BadRequestException;
 import com.sws.sws.error.exception.CategoryNotFoundException;
 import com.sws.sws.error.exception.PostNotFoundException;
 import com.sws.sws.error.exception.UnAuthorizedException;
@@ -18,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +54,36 @@ public class PostService {
                     .build();
         }
     }
+
+    public PaginationDto findPostByCategoryId(Long categoryId, Pageable pageable) {
+        Optional<CategoryEntity> id = categoryRepository.findById(categoryId);
+
+        if(id == null){
+            throw  new BadRequestException("카테고리를 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
+        }
+
+        List<PostEntity> postList = id.stream()
+                .flatMap(category -> category.getPosts().stream())
+                .sorted(Comparator.comparing(PostEntity::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        int endItem = Math.min(startItem + pageSize, postList.size());
+
+        List<PostEntity> pageContent = postList.subList(startItem, endItem);
+        List<ResponsePostDto> postDtos = pageContent.stream()
+                .map(ResponseValue::getAllBuild)
+                .collect(Collectors.toList());
+
+        long totalPages = (long) Math.ceil((double) postList.size() / (double) pageSize);
+        boolean isLastPage = !pageable.isPaged() || currentPage >= totalPages - 1;
+
+        return ResponseValue.getPaginationDto(totalPages, isLastPage, (long) postList.size(), postDtos);
+
+    }
+
 
 
 

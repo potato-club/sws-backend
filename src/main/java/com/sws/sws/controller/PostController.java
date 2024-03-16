@@ -1,14 +1,12 @@
 package com.sws.sws.controller;
 
-import com.sws.sws.dto.post.RequestPostDto;
-import com.sws.sws.dto.post.RequestUpdatePostDto;
-import com.sws.sws.dto.post.ResponsePostDto;
-import com.sws.sws.dto.post.ResponsePostListDto;
+import com.sws.sws.dto.post.*;
 import com.sws.sws.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +37,18 @@ public class PostController {
     public ResponseEntity<String> createPost(@RequestBody RequestPostDto dto, HttpServletRequest request) {
         postService.createPost(dto, request);
         return ResponseEntity.ok().body("게시물이 생성되었습니다.");
+    }
+
+    @Operation(summary = "카테고리별 게시물 조회")
+    @GetMapping("/{category}") // 카테고리별 게시물 조회 //
+    public PaginationDto findPostByCategory(
+            @PathVariable Long category,
+            @RequestParam(defaultValue = "0")
+            int page,
+            @RequestParam(defaultValue = "8") // 8개씩
+            int size) {
+        PaginationDto allPostByParentCategory = postService.findPostByCategoryId(category, PageRequest.of(page, size));
+        return allPostByParentCategory;
     }
 
     @PutMapping("/{id}")
