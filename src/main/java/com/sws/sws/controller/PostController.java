@@ -53,6 +53,12 @@ public class PostController {
         return allPostByParentCategory;
     }
 
+    @Operation(summary = "Hot한 게시물 조회(좋아요순)")
+    @GetMapping("/like")
+    public List<ResponsePostDto> getPostLowerThanId(@RequestParam Long lastPostId, @RequestParam int size) {
+        return postService.findAllPostByLogic(lastPostId, size);
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "게시물 수정(유저권한 필요)")
     public ResponseEntity<String> updatePost(@RequestBody RequestUpdatePostDto dto, @PathVariable("id") Long id, HttpServletRequest request) {

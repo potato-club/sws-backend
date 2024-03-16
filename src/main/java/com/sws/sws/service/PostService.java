@@ -55,6 +55,28 @@ public class PostService {
         }
     }
 
+    public List<ResponsePostDto> findAllPostByLogic(Long lastPostId, int size) { // 좋아요순으로 변경하도록 추가
+
+
+        PageRequest pageRequest = PageRequest.of(0, size);
+        Page<PostEntity> entityPage = postRepository.findByIdLessThanOrderByIdDesc(lastPostId, pageRequest);
+        List<PostEntity> postEntityList = postRepository.findAllOrderByLikesDesc();
+
+        List<ResponsePostDto> responsePostDtos  = postEntityList.stream()
+                .map(postEntity -> ResponsePostDto.builder()
+                        .id(postEntity.getId())
+                        .createdAt(postEntity.getCreatedAt())
+                        .likeNums(postEntity.getLikes())
+                        .views(postEntity.getViews())
+                        .title(postEntity.getTitle())
+                        .content(postEntity.getContent())
+                        .categoryName(postEntity.getCategory().getName())
+                        .build())
+                .collect(Collectors.toList());
+        return responsePostDtos;
+
+    }
+
     public PaginationDto findPostByCategoryId(Long categoryId, Pageable pageable) {
         Optional<CategoryEntity> id = categoryRepository.findById(categoryId);
 

@@ -15,6 +15,10 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
     List<PostEntity> findTop5ByOrderByCreatedAtDesc();
 
+    @Query("SELECT p FROM PostEntity p ORDER BY p.likes DESC")
+    List<PostEntity> findAllOrderByLikesDesc();
+    Page<PostEntity> findByIdLessThanOrderByIdDesc(Long lastPostId, PageRequest pageRequest);
+
 
 
 }
