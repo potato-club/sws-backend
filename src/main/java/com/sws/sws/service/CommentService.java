@@ -9,7 +9,7 @@ import com.sws.sws.error.ErrorCode;
 import com.sws.sws.error.exception.NotFoundException;
 import com.sws.sws.error.exception.UnAuthorizedException;
 import com.sws.sws.repository.CommentRepository;
-import com.sws.sws.repository.UserRepository;
+import com.sws.sws.repository.PostRepository;
 import com.sws.sws.utils.ResponseValue;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +27,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentService {
 
+    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final PostService postService;
     private final UserService userService;
 
     public List<CommentResponseDto> findAllCommentByPost(Long lastCommentId, int size) {
-        PageRequest pageRequest = PageRequest.of(0,size);
+
+//        PostEntity postId = postService.getPostId(id);
+
+        PageRequest pageRequest = PageRequest.of(0, size);
         Page<CommentEntity> entityPage = commentRepository.findByIdLessThanOrderByIdDesc(lastCommentId, pageRequest);
         List<CommentEntity> commentEntityList = entityPage.getContent();
 
