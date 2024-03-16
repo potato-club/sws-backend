@@ -61,5 +61,13 @@ public class PostEntity extends PostTime {
         return this;
     }
 
+    public int increaseLikesNums() {
+        return this.likes += 1;
+    }
+
+    public int decreaseLikesNums() {
+        return this.likes -= 1;
+    }
+
 
 }
