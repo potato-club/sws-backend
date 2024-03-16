@@ -2,6 +2,7 @@ package com.sws.sws.controller;
 
 import com.sws.sws.dto.post.RequestPostDto;
 import com.sws.sws.dto.post.RequestUpdatePostDto;
+import com.sws.sws.dto.post.ResponsePostDto;
 import com.sws.sws.dto.post.ResponsePostListDto;
 import com.sws.sws.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +23,13 @@ public class PostController {
     public ResponsePostListDto findAll() {
         ResponsePostListDto all = postService.findAllPost();
         return all;
+    }
+
+    @Operation(summary = "한개의 게시물 조회")
+    @GetMapping("/find/{id}") // 게시물하나
+    public ResponsePostDto findOnePost(@PathVariable("id") Long id) {
+        ResponsePostDto one = postService.findOnePost(id);
+        return one;
     }
 
     @PostMapping()
