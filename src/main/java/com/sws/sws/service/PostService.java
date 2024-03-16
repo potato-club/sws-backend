@@ -112,7 +112,7 @@ public class PostService {
     public ResponsePostDto findOnePost(Long id) {
         Optional<PostEntity> postOptional = postRepository.findById(id);
         PostEntity post = postOptional.orElseThrow(() -> new NoSuchElementException("게시물이 존재하지 않습니다."));
-//        addPostView(id);
+        addPostView(id);
         return ResponseValue.getOneBuild(post);
 
     }
@@ -174,6 +174,17 @@ public class PostService {
     public PostEntity getPostId(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("게시물이 존재하지 않습니다.", ErrorCode.POST_NOT_FOUND_EXCEPTION));
+    }
+
+    public void addPostView(Long id) {
+        Optional<PostEntity> post = postRepository.findById(id);
+        if (post.isPresent()) {
+            PostEntity postEntity = post.get();
+            postEntity.increaseViews();
+            postRepository.save(postEntity);
+        } else {
+            throw new BadRequestException("잘못된 접근입니다.", ErrorCode.ACCESS_DENIED_EXCEPTION);
+        }
     }
 
 
