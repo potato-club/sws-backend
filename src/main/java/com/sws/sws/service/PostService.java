@@ -3,6 +3,7 @@ package com.sws.sws.service;
 import com.sws.sws.dto.post.*;
 import com.sws.sws.entity.CategoryEntity;
 import com.sws.sws.entity.PostEntity;
+import com.sws.sws.entity.TagEntity;
 import com.sws.sws.entity.UserEntity;
 import com.sws.sws.error.ErrorCode;
 import com.sws.sws.error.exception.BadRequestException;
@@ -11,6 +12,7 @@ import com.sws.sws.error.exception.PostNotFoundException;
 import com.sws.sws.error.exception.UnAuthorizedException;
 import com.sws.sws.repository.CategoryRepository;
 import com.sws.sws.repository.PostRepository;
+import com.sws.sws.repository.TagRepository;
 import com.sws.sws.utils.ResponseValue;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
     private final UserService userService;
 
     public ResponsePostListDto findAllPost() {
@@ -126,10 +129,18 @@ public class PostService {
             CategoryEntity category = categoryRepository.findByName(requestDto.getCategory())
                     .orElseThrow(() -> new CategoryNotFoundException("카테고리가 존재하지 않습니다.", ErrorCode.CATEGORY_NOT_FOUND_EXCEPTION));
 
+            List<TagEntity> tags = tagRepository.findByTagIn(requestDto.getTag());
+            Set<TagEntity> distinctTags = new HashSet<>(tags);
+
+            if (distinctTags.size() > 5) {
+                throw new BadRequestException("태그는 5개까지만 가능합니다.", ErrorCode.NOT_FOUND_EXCEPTION);
+            }
+
             PostEntity post = PostEntity.builder()
                     .title(requestDto.getTitle())
                     .userEntity(user.get())
                     .content(requestDto.getContent())
+                    .tags(distinctTags)
                     .category(category)
                     .build();
 
