@@ -1,6 +1,7 @@
 package com.sws.sws.controller;
 
 import com.sws.sws.dto.post.*;
+import com.sws.sws.entity.TagEntity;
 import com.sws.sws.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -71,6 +72,12 @@ public class PostController {
     public ResponseEntity<String> deletePost(@PathVariable("id") Long id, HttpServletRequest request) {
         postService.deletePost(id, request);
         return ResponseEntity.ok().body("게시물이 삭제되었습니다.");
+    }
+
+    @GetMapping("/tags")
+    @Operation(summary = "모든 태그 조회")
+    public List<TagInfoDto> getAllTags() {
+        return postService.getAllTagsId();
     }
 
 
