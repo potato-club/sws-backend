@@ -1,7 +1,6 @@
 package com.sws.sws.controller;
 
 import com.sws.sws.dto.post.*;
-import com.sws.sws.entity.TagEntity;
 import com.sws.sws.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
