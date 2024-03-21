@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -37,9 +38,13 @@ public class PostEntity extends PostTime {
     @OneToMany(mappedBy = "postEntity")
     private List<FileEntity> files;
 
-    @ElementCollection(targetClass = TagName.class)
-    @Enumerated(EnumType.STRING)
-    private List<TagName> postTags;
+    @ManyToMany
+    @JoinTable(
+            name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<TagEntity> tags;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/client")
 @Tag(name = "User Controller", description = "User API")
 public class UserController {
     private final UserService userService;
@@ -38,14 +39,16 @@ public class UserController {
 
 
     //로그아웃 api
-    @GetMapping("user/logout")
+    @GetMapping("/logout")
+    @Operation(summary = "로그아웃")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         userService.logout(request);
         return ResponseEntity.ok("로그아웃되었습니다.");
     }
 
     //사용자 정보 조회 api
-    @GetMapping("/mypage")
+    @GetMapping("/myPage")
+    @Operation(summary = "마이페이지")
     public ResponseEntity<MyPageDto> getUserInfo(HttpServletRequest request) {
         MyPageDto userInfo = userService.viewMyPage(request);
         return ResponseEntity.ok(userInfo);
@@ -53,6 +56,7 @@ public class UserController {
 
     //사용자 정보 수정 api
     @PostMapping("/updateUser")
+    @Operation(summary = "유저정보수정")
     public ResponseEntity<String> updateUser(@RequestBody MyPageDto requestDto, HttpServletRequest request) {
         try {
             userService.updateUser(requestDto, request);
@@ -71,12 +75,14 @@ public class UserController {
     }
 
     @PostMapping("/leave")
+    @Operation(summary = "회원탈퇴")
     public ResponseEntity<?> leave(HttpServletRequest request) {
         userService.leave(request);
         return ResponseEntity.ok().body("탈퇴 처리되었습니다.");
     }
 
     @PostMapping("/delUser")
+    @Operation(summary = "???")
     public ResponseEntity<?> delUser(HttpServletRequest request) {
         userService.delUser(request);
         return ResponseEntity.ok().body("영구 탈퇴 처리되었습니다.");

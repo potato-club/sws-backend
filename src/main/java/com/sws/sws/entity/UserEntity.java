@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 
 import java.util.List;
+import java.util.Set;
 
 @DynamicInsert
 @NoArgsConstructor
@@ -52,9 +53,13 @@ public class UserEntity {
     //    @OneToMany(mappedBy = "userEntity")
     //    private List<LocationEntity> locations;
 
-    @ElementCollection(targetClass = TagName.class)
-    @Enumerated(EnumType.STRING)
-    private List<TagName> userTags;
+    @ManyToMany
+    @JoinTable(
+            name = "user_tags",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<TagEntity> tags;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "userRole", nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'USER'")
@@ -75,7 +80,7 @@ public class UserEntity {
     }
 
 
-    public void setIsDel(boolean deleted) {
+    public void setIsDel(boolean deleted) { // set이 음,,,엥
         this.isDel = deleted;
     }
 

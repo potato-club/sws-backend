@@ -3,7 +3,9 @@ package com.sws.sws.service;
 import com.sws.sws.dto.post.*;
 import com.sws.sws.entity.CategoryEntity;
 import com.sws.sws.entity.PostEntity;
+import com.sws.sws.entity.TagEntity;
 import com.sws.sws.entity.UserEntity;
+import com.sws.sws.enums.TagName;
 import com.sws.sws.error.ErrorCode;
 import com.sws.sws.error.exception.BadRequestException;
 import com.sws.sws.error.exception.CategoryNotFoundException;
@@ -11,6 +13,7 @@ import com.sws.sws.error.exception.PostNotFoundException;
 import com.sws.sws.error.exception.UnAuthorizedException;
 import com.sws.sws.repository.CategoryRepository;
 import com.sws.sws.repository.PostRepository;
+import com.sws.sws.repository.TagRepository;
 import com.sws.sws.utils.ResponseValue;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
     private final UserService userService;
 
     public ResponsePostListDto findAllPost() {
@@ -62,7 +66,7 @@ public class PostService {
         Page<PostEntity> entityPage = postRepository.findByIdLessThanOrderByIdDesc(lastPostId, pageRequest);
         List<PostEntity> postEntityList = postRepository.findAllOrderByLikesDesc();
 
-        List<ResponsePostDto> responsePostDtos  = postEntityList.stream()
+        List<ResponsePostDto> responsePostDtos = postEntityList.stream()
                 .map(postEntity -> ResponsePostDto.builder()
                         .id(postEntity.getId())
                         .createdAt(postEntity.getCreatedAt())
@@ -80,8 +84,8 @@ public class PostService {
     public PaginationDto findPostByCategoryId(Long categoryId, Pageable pageable) {
         Optional<CategoryEntity> id = categoryRepository.findById(categoryId);
 
-        if(id == null){
-            throw  new BadRequestException("카테고리를 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
+        if (id == null) {
+            throw new BadRequestException("카테고리를 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
         }
 
         List<PostEntity> postList = id.stream()
@@ -107,8 +111,6 @@ public class PostService {
     }
 
 
-
-
     public ResponsePostDto findOnePost(Long id) {
         Optional<PostEntity> postOptional = postRepository.findById(id);
         PostEntity post = postOptional.orElseThrow(() -> new NoSuchElementException("게시물이 존재하지 않습니다."));
@@ -120,16 +122,24 @@ public class PostService {
     public Long createPost(RequestPostDto requestDto, HttpServletRequest request) {
 
         Optional<UserEntity> user = userService.findByUserToken(request);
-        if(user.get().getUserRole() == null) {
+        if (user.get().getUserRole() == null) {
             throw new UnAuthorizedException("로그인후 이용해주세요.", ErrorCode.NOT_ALLOW_WRITE_EXCEPTION);
         } else {
             CategoryEntity category = categoryRepository.findByName(requestDto.getCategory())
                     .orElseThrow(() -> new CategoryNotFoundException("카테고리가 존재하지 않습니다.", ErrorCode.CATEGORY_NOT_FOUND_EXCEPTION));
 
+            List<TagEntity> tags = tagRepository.findByTagIn(requestDto.getTag());
+            Set<TagEntity> distinctTags = new HashSet<>(tags);
+
+            if (distinctTags.size() > 5) {
+                throw new BadRequestException("태그는 5개까지만 가능합니다.", ErrorCode.NOT_FOUND_EXCEPTION);
+            }
+
             PostEntity post = PostEntity.builder()
                     .title(requestDto.getTitle())
                     .userEntity(user.get())
                     .content(requestDto.getContent())
+                    .tags(distinctTags)
                     .category(category)
                     .build();
 
@@ -142,7 +152,7 @@ public class PostService {
     public Long updatePost(RequestUpdatePostDto updatePostDto, Long id, HttpServletRequest request) {
 
         Optional<UserEntity> user = userService.findByUserToken(request);
-        if(user.get().getUserRole() == null) {
+        if (user.get().getUserRole() == null) {
             throw new UnAuthorizedException("로그인후 이용해주세요.", ErrorCode.NOT_ALLOW_WRITE_EXCEPTION);
         } else {
 
@@ -160,7 +170,7 @@ public class PostService {
     public void deletePost(Long id, HttpServletRequest request) {
 
         Optional<UserEntity> user = userService.findByUserToken(request);
-        if(user.get().getUserRole() == null) {
+        if (user.get().getUserRole() == null) {
             throw new UnAuthorizedException("로그인후 이용해주세요.", ErrorCode.NOT_ALLOW_WRITE_EXCEPTION);
         } else {
 
@@ -185,6 +195,13 @@ public class PostService {
         } else {
             throw new BadRequestException("잘못된 접근입니다.", ErrorCode.ACCESS_DENIED_EXCEPTION);
         }
+    }
+
+    public List<TagInfoDto> getAllTagsId() {
+        List<TagEntity> allTagsName = tagRepository.findAll();
+        return allTagsName.stream()
+                .map(tag -> new TagInfoDto(tag.getId(),tag.getTag()))
+                .collect(Collectors.toList());
     }
 
 
