@@ -1,7 +1,7 @@
 FROM openjdk:17-jdk AS build
 WORKDIR /tmp
 COPY . /tmp
-RUN chmod +x ./gradlew && ./gradlew clean bootJar
+RUN yum update -y && yum install -y findutils && chmod +x ./gradlew && ./gradlew clean bootJar
 
 # 생성한 jar 파일을 실행함.
 FROM openjdk:17-jdk
