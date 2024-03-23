@@ -75,6 +75,7 @@ public class UserEntity {
     }
 
 
+    //set 쓰지않기
     public void setIsDel(boolean deleted) {
         this.isDel = deleted;
     }
