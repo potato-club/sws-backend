@@ -70,7 +70,3 @@ tasks.named('test') {
 	systemProperty "jasypt.encryptor.password", project.getProperties().get("jasypt.encryptor.password")
 
 }
-
-jar {
-	enabled = false
-}
