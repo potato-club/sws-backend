@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 public class JasyptConfigTest {
     @Test
     void jasypt(){
-        String url = "jdbc:mysql://sws.cpsqeqw0ir0j.ap-northeast-2.rds.amazonaws.com:3306/sws";
+        String url = "jdbc:mysql://sws.cpsqeqw0ir0j.ap-northeast-2.rds.amazonaws.com:3306";
         String username = "admin";
         String password = "rlatndk123!";
         String tokenKey = "gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767";
