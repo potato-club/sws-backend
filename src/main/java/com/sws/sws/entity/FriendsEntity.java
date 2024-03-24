@@ -1,5 +1,6 @@
 package com.sws.sws.entity;
 
+import com.sws.sws.enums.FriendStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,13 +16,26 @@ public class FriendsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private UserEntity userEntity;
 
-    @Column(nullable = false, unique = true)
-    private Boolean isFriend;
+    @Column(nullable = false)
+    private String userEmail;
+
+    @Column(nullable = false)
+    private String friendEmail;
+
+    private FriendStatus status;
+
+    private boolean isFrom;
+
+    private Long counterpartId;
 
     @Column(nullable = false, unique = false)
     private String friendUrl;
+
+    public void acceptFriendshipRequest() {
+        status = FriendStatus.ACCEPT;
+    }
 }

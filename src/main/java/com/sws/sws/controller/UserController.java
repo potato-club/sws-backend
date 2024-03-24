@@ -87,4 +87,6 @@ public class UserController {
         userService.delUser(request);
         return ResponseEntity.ok().body("영구 탈퇴 처리되었습니다.");
     }
+
+
 }

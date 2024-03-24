@@ -10,6 +10,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +40,7 @@ public class UserEntity {
     private String nickname;
 
     @OneToMany(mappedBy = "userEntity")
-    private List<FriendsEntity> friends;
+    private List<FriendsEntity> friends = new ArrayList<>();
 
     @OneToMany(mappedBy = "userEntity")
     private List<PostEntity> posts;
