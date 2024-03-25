@@ -18,10 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/client")
 @Tag(name = "User Controller", description = "User API")
 public class UserController {
+
     private final UserService userService;
 
-
-    //회원가입 api
     @PostMapping("/signup")
     @Operation(summary = "회원가입")
     public ResponseEntity<String> signUp(@RequestBody SignupRequestDto requestDto) {
@@ -29,16 +28,12 @@ public class UserController {
         return ResponseEntity.ok("회원가입 완료");
     }
 
-
-    //로그인 api
     @PostMapping("/login")
     @Operation(summary = "로그인")
     public LoginResponseDto login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
         return userService.login(requestDto, response);
     }
 
-
-    //로그아웃 api
     @GetMapping("/logout")
     @Operation(summary = "로그아웃")
     public ResponseEntity<String> logout(HttpServletRequest request) {
@@ -46,7 +41,6 @@ public class UserController {
         return ResponseEntity.ok("로그아웃되었습니다.");
     }
 
-    //사용자 정보 조회 api
     @GetMapping("/myPage")
     @Operation(summary = "마이페이지")
     public ResponseEntity<MyPageDto> getUserInfo(HttpServletRequest request) {
@@ -54,7 +48,6 @@ public class UserController {
         return ResponseEntity.ok(userInfo);
     }
 
-    //사용자 정보 수정 api
     @PostMapping("/updateUser")
     @Operation(summary = "유저정보수정")
     public ResponseEntity<String> updateUser(@RequestBody MyPageDto requestDto, HttpServletRequest request) {
@@ -66,7 +59,6 @@ public class UserController {
         }
     }
 
-    //토큰 재발급 api
     @GetMapping("/reissue")
     @Operation(summary = "토큰 재발급")
     public ResponseEntity<String> reissueToken(HttpServletRequest request, HttpServletResponse response) {
@@ -86,6 +78,13 @@ public class UserController {
     public ResponseEntity<?> delUser(HttpServletRequest request) {
         userService.delUser(request);
         return ResponseEntity.ok().body("영구 탈퇴 처리되었습니다.");
+    }
+
+    @PostMapping("/friends")
+    @Operation(summary = "친구추가 요청 api")
+    public ResponseEntity<String> sendFriendRequest(@RequestBody FriendRequestDto toEmail, HttpServletRequest request) {
+        userService.createFriendship(toEmail, request);
+        return ResponseEntity.ok().body("친구추가 요청이 전송되었습니다.");
     }
 
 

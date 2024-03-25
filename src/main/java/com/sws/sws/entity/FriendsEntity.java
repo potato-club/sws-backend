@@ -3,12 +3,14 @@ package com.sws.sws.entity;
 import com.sws.sws.enums.FriendStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 public class FriendsEntity {
 
@@ -32,10 +34,14 @@ public class FriendsEntity {
 
     private Long counterpartId;
 
-    @Column(nullable = false, unique = false)
-    private String friendUrl;
+//    @Column(nullable = false, unique = false)
+//    private String friendUrl;
 
     public void acceptFriendshipRequest() {
         status = FriendStatus.ACCEPT;
+    }
+
+    public void setCounterpartId(Long id) {
+        counterpartId = id;
     }
 }

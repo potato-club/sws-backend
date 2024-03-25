@@ -71,7 +71,6 @@ public class UserEntity {
     private Level level;
 
 
-
     public void update(MyPageDto myPageDto) {
         this.email = myPageDto.getEmail();
         this.userName = myPageDto.getUserName();
@@ -80,11 +79,9 @@ public class UserEntity {
         this.userRole = myPageDto.getUserRole();
     }
 
-
     public void setIsDel(boolean deleted) { // set이 음,,,엥
         this.isDel = deleted;
-    }
-
+    } ///????
 
     //    @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
     @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")
