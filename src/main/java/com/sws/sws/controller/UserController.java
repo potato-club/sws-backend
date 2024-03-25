@@ -87,5 +87,11 @@ public class UserController {
         return ResponseEntity.ok().body("친구추가 요청이 전송되었습니다.");
     }
 
+    @GetMapping("/friends/received")
+    @Operation(summary = "친구요청 목록 조회")
+    public ResponseEntity<?> getWaitingFriendsInfo(HttpServletRequest request) {
+        return userService.getWaitingFriendList(request);
+    }
+
 
 }

@@ -223,12 +223,12 @@ public class UserService {
         friendRepository.save(friendTo);
         friendRepository.save(friendFrom);
 
-        friendTo.setCounterpartId(friendFrom.getId());
+        friendTo.setCounterpartId(friendFrom.getId()); // 아 근데 이렇게 set 쓰면 안되는디
         friendFrom.setCounterpartId(friendTo.getId());
 
     }
 
-    private ResponseEntity<?> getWaitingFriendList(HttpServletRequest request) {
+    public ResponseEntity<?> getWaitingFriendList(HttpServletRequest request) {
         UserEntity user = userRepository.findByEmail(jwtTokenProvider.getUserEmail(jwtTokenProvider.resolveAccessToken(request)))
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION, "유저를 찾을 수 없습니다."));
         List<FriendsEntity> friendsEntityList = user.getFriends(); // 유저 리스트 받아오고
