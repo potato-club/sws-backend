@@ -93,5 +93,14 @@ public class UserController {
         return userService.getWaitingFriendList(request);
     }
 
+    @PostMapping("/friends/approve/{id}") // 받은사람만 요청을 받을 수 있게 수정해야하고 다시 수락버튼 누르면 오류처리
+    @Operation(summary = "친구 요청 수락")
+    public ResponseEntity<String> approveFriendRequest(@PathVariable("id") Long id) {
+        userService.approveFriendRequest(id);
+        return ResponseEntity.ok().body("친구 요청이 수락되었습니다.");
+    }
+
+
+
 
 }

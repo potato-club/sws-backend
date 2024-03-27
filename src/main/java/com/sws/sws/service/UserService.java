@@ -6,6 +6,7 @@ import com.sws.sws.entity.UserEntity;
 import com.sws.sws.enums.FriendStatus;
 import com.sws.sws.enums.UserRole;
 import com.sws.sws.error.ErrorCode;
+import com.sws.sws.error.exception.BadRequestException;
 import com.sws.sws.error.exception.NotFoundException;
 import com.sws.sws.error.exception.UnAuthorizedException;
 import com.sws.sws.jwt.JwtTokenProvider;
@@ -250,6 +251,18 @@ public class UserService {
             }
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    public void approveFriendRequest(Long friendId) {
+        FriendsEntity friends = friendRepository.findById(friendId)
+                .orElseThrow(() -> new BadRequestException("잘못된 요청입니다.", NOT_FOUND_EXCEPTION));
+
+        FriendsEntity counterpart = friendRepository.findById(friends.getCounterpartId())
+                .orElseThrow(() -> new BadRequestException("잘못된 요청입니다.", NOT_FOUND_EXCEPTION));
+
+        friends.acceptFriendshipRequest();
+        counterpart.acceptFriendshipRequest();
+
     }
 
 }
