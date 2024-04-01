@@ -10,6 +10,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +40,7 @@ public class UserEntity {
     private String nickname;
 
     @OneToMany(mappedBy = "userEntity")
-    private List<FriendsEntity> friends;
+    private List<FriendsEntity> friends = new ArrayList<>();
 
     @OneToMany(mappedBy = "userEntity")
     private List<PostEntity> posts;
@@ -70,8 +71,7 @@ public class UserEntity {
     private Level level;
 
 
-
-    public void update(MyPageDto myPageDto) {
+    public void update(MyPageDto myPageDto) { // 사실 이것도 있으면 안되는거같은데
         this.email = myPageDto.getEmail();
         this.userName = myPageDto.getUserName();
         this.nickname = myPageDto.getNickname();
@@ -79,11 +79,9 @@ public class UserEntity {
         this.userRole = myPageDto.getUserRole();
     }
 
-
     public void setIsDel(boolean deleted) { // set이 음,,,엥
         this.isDel = deleted;
-    }
-
+    } ///????
 
     //    @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
     @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")

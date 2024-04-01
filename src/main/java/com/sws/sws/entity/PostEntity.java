@@ -60,7 +60,7 @@ public class PostEntity extends PostTime {
     private Boolean isDel;
 
 
-    public PostEntity updatePost(String title, String content) {
+    public PostEntity updatePost(String title, String content) { // 그럼 얘도 안돼
         this.title = title;
         this.content = content;
         return this;

@@ -18,10 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/client")
 @Tag(name = "User Controller", description = "User API")
 public class UserController {
+
     private final UserService userService;
 
-
-    //회원가입 api
     @PostMapping("/signup")
     @Operation(summary = "회원가입")
     public ResponseEntity<String> signUp(@RequestBody SignupRequestDto requestDto) {
@@ -29,16 +28,12 @@ public class UserController {
         return ResponseEntity.ok("회원가입 완료");
     }
 
-
-    //로그인 api
     @PostMapping("/login")
     @Operation(summary = "로그인")
     public LoginResponseDto login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
         return userService.login(requestDto, response);
     }
 
-
-    //로그아웃 api
     @GetMapping("/logout")
     @Operation(summary = "로그아웃")
     public ResponseEntity<String> logout(HttpServletRequest request) {
@@ -46,7 +41,6 @@ public class UserController {
         return ResponseEntity.ok("로그아웃되었습니다.");
     }
 
-    //사용자 정보 조회 api
     @GetMapping("/myPage")
     @Operation(summary = "마이페이지")
     public ResponseEntity<MyPageDto> getUserInfo(HttpServletRequest request) {
@@ -54,7 +48,6 @@ public class UserController {
         return ResponseEntity.ok(userInfo);
     }
 
-    //사용자 정보 수정 api
     @PostMapping("/updateUser")
     @Operation(summary = "유저정보수정")
     public ResponseEntity<String> updateUser(@RequestBody MyPageDto requestDto, HttpServletRequest request) {
@@ -66,7 +59,6 @@ public class UserController {
         }
     }
 
-    //토큰 재발급 api
     @GetMapping("/reissue")
     @Operation(summary = "토큰 재발급")
     public ResponseEntity<String> reissueToken(HttpServletRequest request, HttpServletResponse response) {
@@ -87,4 +79,27 @@ public class UserController {
         userService.delUser(request);
         return ResponseEntity.ok().body("영구 탈퇴 처리되었습니다.");
     }
+
+    @PostMapping("/friends")
+    @Operation(summary = "친구추가 요청 api")
+    public ResponseEntity<String> sendFriendRequest(@RequestBody FriendRequestDto toEmail, HttpServletRequest request) {
+        userService.createFriendship(toEmail, request);
+        return ResponseEntity.ok().body("친구추가 요청이 전송되었습니다.");
+    }
+
+    @GetMapping("/friends/received")
+    @Operation(summary = "친구요청 목록 조회")
+    public ResponseEntity<?> getWaitingFriendsInfo(HttpServletRequest request) {
+        return userService.getWaitingFriendList(request);
+    }
+
+    // 추가적으로 친구 삭제 api도 만들어야할듯?
+    @PostMapping("/friends/approve/{id}") // 받은사람만 요청을 받을 수 있게 수정해야하고 다시 수락버튼 누르면 오류처리
+    @Operation(summary = "친구 요청 수락")
+    public ResponseEntity<String> approveFriendRequest(@PathVariable("id") Long id, HttpServletRequest request) {
+        userService.approveFriendRequest(id, request);
+        return ResponseEntity.ok().body("친구 요청이 수락되었습니다.");
+    }
+
+
 }
