@@ -223,9 +223,6 @@ public class UserService {
         friendRepository.save(friendTo);
         friendRepository.save(friendFrom);
 
-//        friendTo.setCounterpartId(friendFrom.getId()); // 아 근데 이렇게 set 쓰면 안되는디
-//        friendFrom.setCounterpartId(friendTo.getId());
-
     }
 
     public ResponseEntity<?> getWaitingFriendList(HttpServletRequest request) {
@@ -266,12 +263,11 @@ public class UserService {
         Long responseUserId = findByUserToken(request).get().getUserId();
 
         if (counterpart.getUserEntity().getUserId() == responseUserId) {
-            friends.acceptFriendshipRequest();
             counterpart.acceptFriendshipRequest();
+            friends.acceptFriendshipRequest();
         } else {
             throw new BadRequestException("잘못된 요청입니다.",NOT_FOUND_EXCEPTION);
         }
-
     }
 
 }

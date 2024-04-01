@@ -71,7 +71,7 @@ public class UserEntity {
     private Level level;
 
 
-    public void update(MyPageDto myPageDto) {
+    public void update(MyPageDto myPageDto) { // 사실 이것도 있으면 안되는거같은데
         this.email = myPageDto.getEmail();
         this.userName = myPageDto.getUserName();
         this.nickname = myPageDto.getNickname();
