@@ -253,15 +253,25 @@ public class UserService {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    public void approveFriendRequest(Long friendId) {
-        FriendsEntity friends = friendRepository.findById(friendId)
+    public void approveFriendRequest(Long friendId, HttpServletRequest request) {
+
+        // 입력받은 아이디값이 뭔데? 친구요청한 녀석의 id값
+        // 그럼 그 친구요청한 녀석의 상대방 id값과 token을 넣은 id값이 일치하면 하면되겠따
+
+        FriendsEntity friends = friendRepository.findById(friendId) // 보낸사람
                 .orElseThrow(() -> new BadRequestException("잘못된 요청입니다.", NOT_FOUND_EXCEPTION));
 
-        FriendsEntity counterpart = friendRepository.findById(friends.getCounterpartId())
+        FriendsEntity counterpart = friendRepository.findById(friends.getCounterpartId()) // 받은사람
                 .orElseThrow(() -> new BadRequestException("잘못된 요청입니다.", NOT_FOUND_EXCEPTION));
 
-        friends.acceptFriendshipRequest();
-        counterpart.acceptFriendshipRequest();
+        Long responseUserId = findByUserToken(request).get().getUserId();
+
+        if (counterpart.getUserEntity().getUserId() == responseUserId) {
+            friends.acceptFriendshipRequest();
+            counterpart.acceptFriendshipRequest();
+        } else {
+            throw new BadRequestException("잘못된 요청입니다.",NOT_FOUND_EXCEPTION);
+        }
 
     }
 
