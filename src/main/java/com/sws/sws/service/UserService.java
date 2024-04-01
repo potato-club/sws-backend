@@ -199,15 +199,13 @@ public class UserService {
         UserEntity toUser = userRepository.findByEmail(friendRequestDto.getToEmail())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION, "받는 유저를 찾을 수 없습니다."));
 
-        log.info(String.valueOf(toUser));
-        System.out.println(toUser);
-
         FriendsEntity friendFrom = FriendsEntity.builder()
                 .userEntity(fromUser)
                 .userEmail(fromEmail)
                 .friendEmail(friendRequestDto.getToEmail())
                 .status(FriendStatus.WAITING)
                 .isFrom(true)
+                .counterpartId(toUser.getUserId())
                 .build();
 
         FriendsEntity friendTo = FriendsEntity.builder()
@@ -216,6 +214,7 @@ public class UserService {
                 .friendEmail(fromEmail)
                 .status(FriendStatus.WAITING)
                 .isFrom(false)
+                .counterpartId(fromUser.getUserId())
                 .build();
 
         fromUser.getFriends().add(friendTo);
@@ -224,8 +223,8 @@ public class UserService {
         friendRepository.save(friendTo);
         friendRepository.save(friendFrom);
 
-        friendTo.setCounterpartId(friendFrom.getId()); // 아 근데 이렇게 set 쓰면 안되는디
-        friendFrom.setCounterpartId(friendTo.getId());
+//        friendTo.setCounterpartId(friendFrom.getId()); // 아 근데 이렇게 set 쓰면 안되는디
+//        friendFrom.setCounterpartId(friendTo.getId());
 
     }
 

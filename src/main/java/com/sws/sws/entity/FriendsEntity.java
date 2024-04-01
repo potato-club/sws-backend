@@ -41,7 +41,4 @@ public class FriendsEntity {
         status = FriendStatus.ACCEPT;
     }
 
-    public void setCounterpartId(Long id) {
-        counterpartId = id;
-    }
 }
