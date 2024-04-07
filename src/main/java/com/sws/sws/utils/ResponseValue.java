@@ -20,6 +20,7 @@ public class ResponseValue {
                     .title(postEntity.getTitle())
                     .content(postEntity.getContent())
                     .userName(postEntity.getUserEntity().getUserName())
+                    .views(postEntity.getViews())
                     .createdAt(postEntity.getCreatedAt())
                     .updatedAt(postEntity.getUpdatedAt())
                     .build();

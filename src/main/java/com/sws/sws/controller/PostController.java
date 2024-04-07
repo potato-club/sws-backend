@@ -73,5 +73,12 @@ public class PostController {
         return ResponseEntity.ok().body("게시물이 삭제되었습니다.");
     }
 
+    @GetMapping("/tags")
+    @Operation(summary = "모든 태그 조회")
+    public List<TagInfoDto> getAllTags() {
+        return postService.getAllTagsId();
+    }
+
+
 
 }

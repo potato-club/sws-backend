@@ -11,7 +11,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi postApi() {
         Info info = new Info().title("게시물 관련 API").version("v0.1");
-        String[] paths = {"/post/**"};
+        String[] paths = {"/post/**","/search"};
 
         return GroupedOpenApi.builder()
                 .group("post")
@@ -37,7 +37,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi userApi() {
         Info info = new Info().title("유저 관련 API").version("v0.1");
-        String[] paths = {"/client/**"};
+        String[] paths = {"/client/**","/like/**"};
 
         return GroupedOpenApi.builder()
                 .group("client")

@@ -10,7 +10,9 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @DynamicInsert
 @NoArgsConstructor
@@ -38,7 +40,7 @@ public class UserEntity {
     private String nickname;
 
     @OneToMany(mappedBy = "userEntity")
-    private List<FriendsEntity> friends;
+    private List<FriendsEntity> friends = new ArrayList<>();
 
     @OneToMany(mappedBy = "userEntity")
     private List<PostEntity> posts;
@@ -52,9 +54,13 @@ public class UserEntity {
     //    @OneToMany(mappedBy = "userEntity")
     //    private List<LocationEntity> locations;
 
-    @ElementCollection(targetClass = TagName.class)
-    @Enumerated(EnumType.STRING)
-    private List<TagName> userTags;
+    @ManyToMany
+    @JoinTable(
+            name = "user_tags",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<TagEntity> tags;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "userRole", nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'USER'")
@@ -65,8 +71,7 @@ public class UserEntity {
     private Level level;
 
 
-
-    public void update(MyPageDto myPageDto) {
+    public void update(MyPageDto myPageDto) { // 사실 이것도 있으면 안되는거같은데
         this.email = myPageDto.getEmail();
         this.userName = myPageDto.getUserName();
         this.nickname = myPageDto.getNickname();
@@ -74,16 +79,12 @@ public class UserEntity {
         this.userRole = myPageDto.getUserRole();
     }
 
-
-    //set 쓰지않기
-    public void setIsDel(boolean deleted) {
-        this.isDel = deleted;
+    public void checkDeleted() {
+        this.isDel = true;
     }
-
 
     //    @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
     @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")
     private Boolean isDel;
-
 
 }
