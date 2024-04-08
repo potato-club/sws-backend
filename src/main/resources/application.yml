@@ -1,0 +1,40 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: ENC(RSbrP03ssVRG3lnA/2vIJJ4WCnhYTZ95TOcrqAGhRWM1pht+oOV+EmWrelpdjWfn92SxsfqGNt7/PanxFKSgxtes0o4EOKrq9SbCk361LYA=)
+    username: ENC(QBxS9m6W7BykJJtP8877Dw==)
+    password: ENC(wewBQZsVSc8v64PA4+IZb4yFguy3XwRU)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  jpa:
+#    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        show_sql: true
+        format_sql: true
+    open-in-view: false
+  logging:
+    level:
+      root: TRACE
+
+
+
+jwt:
+  secretKey: ENC(Zg4tO/oBEDDUDGzg/hz0RJlCqFgU+2v2BUa0V5Cr9P+l7qU8nNPDzxA0xCr40RiWbn9r/FoD3ZDDeGWlKcDNibs4T1t7BnhyCCp3aM7iOTLnBLsmUehDhkliXViWe6Bg)
+  accessExpiration : 18000
+  refreshExpiration: 25000
+
+security:
+  token:
+    blacklistExpiration: 3600000
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
