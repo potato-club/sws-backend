@@ -138,14 +138,14 @@ public class UserService {
         jwtTokenProvider.setHeaderAT(response, newAccessToken);
         jwtTokenProvider.setHeaderRT(response, newRefreshToken);
     }
-
-    //탈퇴
+    
+    //임시 탈퇴
     public void leave(HttpServletRequest request) {
         Optional<UserEntity> user = findByUserToken(request);
 
         if (user.isPresent()) {
             UserEntity userEntity = user.get();
-            userEntity.setIsDel(true);
+            userEntity.checkDeleted(); 
             this.logout(request);
         } else {
             throw new UnAuthorizedException("404", NOT_FOUND_EXCEPTION);

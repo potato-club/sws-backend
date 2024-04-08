@@ -79,13 +79,12 @@ public class UserEntity {
         this.userRole = myPageDto.getUserRole();
     }
 
-    public void setIsDel(boolean deleted) { // set이 음,,,엥
-        this.isDel = deleted;
-    } ///????
+    public void checkDeleted() {
+        this.isDel = true;
+    }
 
     //    @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
     @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")
     private Boolean isDel;
-
 
 }

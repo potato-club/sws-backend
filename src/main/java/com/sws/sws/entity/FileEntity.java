@@ -20,6 +20,7 @@ public class FileEntity {
     @JoinColumn(name="post_id")
     private PostEntity postEntity;
 
+    //userEntity에 외래키에 넣기 그냥 userEntity와 매핑하기
     @Column(nullable = false, unique = true)
     private String s3Url;
 
