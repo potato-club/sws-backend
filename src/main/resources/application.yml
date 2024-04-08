@@ -38,4 +38,3 @@ security:
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
-    password: ENC(ygLeVXN000QWMoyRfn8HgjAUo7oFNBe1)
