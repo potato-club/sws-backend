@@ -2,9 +2,9 @@ server:
   port: 8081
 spring:
   datasource:
-    url: ENC(NOd6PoXkT+0LcpFrlm5XzBQPIbTW3vQrfXVpQHunZseo6+GENOx+c2Joza+mizaiRg+qK8a+NCrTsBvcgX2+Er2Qcb1W/mokHYutpxOZkEc=)
-    username: ENC(KDsj2LZoAhbXNLpX9xt5CA==)
-    password: ENC(+e4oL8vuZV0rLrTPP489bai4wWo8K/qM)
+    url: ENC(KcZfiyL7xhIPYbr6Hjr2TFgPCe+loiQCoONsbe/TaB5G2DBlkCfyjIg7G+pA/VKE+NYRz55yxzspNajEDgh8aKdFMEl8yn/Ck+mXvj29lPE=)
+    username: ENC(aVLZkl4iHCPJai7ySPLacw==)
+    password: ENC(G3qoBrFWJLais1SByH2kLD16k5pulMPg)
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
@@ -27,7 +27,7 @@ spring:
 
 
 jwt:
-  secretKey: ENC(+XiHm49foxIHp53nDaSgrM2PlT7LcBIIrlLe+EfDNVJ5SPg3LENEyMhJoxO0nYUU2ZqqYNNQS9OYl4DgUXHCfXda5Yb8DJ9ZyLzo9XvUar6cKuzbK2Y3Y+ToxRupje07)
+  secretKey: ENC(E2ngNWl5evNIbF856CLqAEcgtM5Xrv9DQjFAn9RnSVYNCxNXgNIO9Gw6mwESKwnPgd6cInFnT4qcpl2L0NKVRIeqpuDvlATsyCw2PPoiisOMNH+9q3TTCLUrO2VtDxiK)
   accessExpiration : 18000
   refreshExpiration: 25000
 
@@ -38,4 +38,3 @@ security:
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
-    password : 1234
