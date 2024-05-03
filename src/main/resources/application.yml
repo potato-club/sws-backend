@@ -29,7 +29,7 @@ spring:
 
 
 jwt:
-
+  secretKey: gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767
   #  secretKey: ENC(E2ngNWl5evNIbF856CLqAEcgtM5Xrv9DQjFAn9RnSVYNCxNXgNIO9Gw6mwESKwnPgd6cInFnT4qcpl2L0NKVRIeqpuDvlATsyCw2PPoiisOMNH+9q3TTCLUrO2VtDxiK)
   accessExpiration : 18000
   refreshExpiration: 25000
