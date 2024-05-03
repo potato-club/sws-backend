@@ -38,3 +38,34 @@ security:
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
+
+
+
+
+#server:
+#  port: 8080
+#spring:
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/swsback
+#    username: root
+#    password: 123456
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  data:
+#    redis:
+#      host: localhost
+#      port: 6379
+#  jpa:
+#    #    database-platform: org.hibernate.dialect.MySQL8Dialect
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        enable_lazy_load_no_trans: true
+#        show_sql: false
+#        format_sql: true
+#    open-in-view: false
+#
+#jwt:
+#  secretKey: gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767
+#  accessExpiration: 3600000
+#  refreshExpiration: 604800000
