@@ -1,6 +1,5 @@
 package com.sws.sws.entity;
 
-import com.sws.sws.enums.FileType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,17 +21,17 @@ public class FileEntity {
     @JoinColumn(name="post_id")
     private PostEntity postEntity;
 
-    //userEntity에 외래키에 넣기 그냥 userEntity와 매핑하기
+    @OneToOne(fetch = FetchType.LAZY) //파일 올린 사용자
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
+
+
     //ungique=true 속성 삭제함
-    @Column(nullable = false)
-    private String fileUrl;
+    @Column(nullable = false, length = 512, columnDefinition = "VARCHAR(512) DEFAULT 'default_value_here'")
+    private String s3url;
 
     @Column(nullable = false, unique = false)
     private String fileName;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private FileType fileType;
 
     @Column(nullable = false, unique = false)
     private long size; //int->long으로 변경함
@@ -40,6 +39,5 @@ public class FileEntity {
     //파일 삭제 여부 추가
     @Column(nullable = false)
     private boolean  deleted;
-
 
 }

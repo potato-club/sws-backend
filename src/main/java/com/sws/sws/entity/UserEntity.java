@@ -50,6 +50,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "userEntity")
     private List<LikeEntity> likes;
+//
+//    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+//    private List<FileEntity> files = new ArrayList<>();
 
     //    @OneToMany(mappedBy = "userEntity")
     //    private List<LocationEntity> locations;
