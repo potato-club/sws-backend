@@ -31,7 +31,7 @@ public class S3ImageService {
     @Transactional
     public FileEntity uploadFile(MultipartFile multipartFile) throws IOException {
         String fileName = UUID.randomUUID().toString() + "-" + multipartFile.getOriginalFilename();
-        String s3Url = bucketName + "/" + fileName;
+        String fileUrl = bucketName + "/" + fileName;
         long fileSize = multipartFile.getSize();
 
         ObjectMetadata metadata = new ObjectMetadata();
@@ -41,7 +41,7 @@ public class S3ImageService {
 
         FileEntity file = FileEntity.builder()
                 .fileName(fileName)
-                .s3url(s3Url)
+                .fileUrl(fileUrl)
                 .size(fileSize)
                 .deleted(false)
                 .build();

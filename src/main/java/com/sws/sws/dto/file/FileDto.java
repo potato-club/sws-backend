@@ -14,7 +14,7 @@ public class FileDto {
     @Schema(description = "이미지 파일 이름")
     private String fileName;
     @Schema(description = "이미지 파일 url")
-    private String s3Url;
+    private String fileUrl;
 
 
 }

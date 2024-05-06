@@ -38,8 +38,6 @@ cloud:
       auto: false
 
 
-
-
 jwt:
   secretKey: ENC(KBKVFcXoXDRLNYxe0GUTtDUQlsNFvZckn0TT3WjJYjhCNYV++LsvWp7qMvQNIGGk+pO/16Ty/CAwgLB3WRV5ivIo8po2O8HFhyLWtmdlvUrvb8iA8EFgcjgOlfgh5LIW)
   accessExpiration : 18000

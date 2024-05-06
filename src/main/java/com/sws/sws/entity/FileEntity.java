@@ -25,10 +25,9 @@ public class FileEntity {
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
-
     //ungique=true 속성 삭제함
     @Column(nullable = false, length = 512, columnDefinition = "VARCHAR(512) DEFAULT 'default_value_here'")
-    private String s3url;
+    private String fileUrl;
 
     @Column(nullable = false, unique = false)
     private String fileName;

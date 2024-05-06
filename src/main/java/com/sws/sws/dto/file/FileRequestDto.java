@@ -13,7 +13,7 @@ public class FileRequestDto {
     private String fileName;
 
     @Schema(description = "파일 Url")
-    private String s3Url;
+    private String fileUrl;
 
     @Schema(description = "파일 삭제/교체 여부")
     private boolean deleted;
