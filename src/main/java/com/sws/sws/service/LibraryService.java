@@ -1,43 +1,27 @@
 package com.sws.sws.service;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import com.sws.sws.dto.library.LocationListResponse;
+import com.sws.sws.dto.library.LocationResponseDto;
+import com.sws.sws.dto.library.OpenApiDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
-@Slf4j
+@RequiredArgsConstructor
 public class LibraryService {
 
-    private final String BASE_URL = "https://openapi.gg.go.kr/TBGGIBLLBR";
-    private final String KEY = "?KEY=d3664ab6de52470fbb0d5e52e8ad7e8b";
-    private final String TYPE = "&Type=xml";
-    private final String pIndex = "&pIndex=1";
-    private final String pSize = "&pSize=10";
+    private final OpenApiManger openApiManger;
 
-    private String make() {
-        return BASE_URL
-                + KEY
-                + TYPE
-                + pIndex
-                + pSize;
+    private LocationListResponse makeResponseList(List<OpenApiDto> dtoList) {
+        List<LocationResponseDto> result = new ArrayList<>();
+        dtoList.forEach(l -> result.add(l.toResponse()));
+        return new LocationListResponse(result);
     }
 
-    public ResponseEntity<?> fetch() {
-        System.out.println(make());
-        log.info(make());
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<?> entity = new HttpEntity<>(new HttpHeaders());
-        ResponseEntity<Map> resultMap = restTemplate.exchange(make(), HttpMethod.GET, entity, Map.class);
-        System.out.println(resultMap.getBody());
-        return resultMap;
-    }
 
 }
