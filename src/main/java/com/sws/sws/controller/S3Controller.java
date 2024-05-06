@@ -1,5 +1,6 @@
 package com.sws.sws.controller;
 
+import com.sws.sws.dto.file.FileRequestDto;
 import com.sws.sws.entity.FileEntity;
 import com.sws.sws.service.S3ImageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +28,40 @@ public class S3Controller {
         try {
             FileEntity uploadedFile = s3ImageService.uploadFile(file);
             return ResponseEntity.ok(uploadedFile);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Operation(summary = "Update Files API")
+    @PutMapping("/update-files")
+    public ResponseEntity<List<FileEntity>> updateFiles(@RequestBody Object entity, @RequestParam("files") List<MultipartFile> files, @RequestBody List<FileRequestDto> requestDto) {
+        try {
+            List<FileEntity> updatedFiles = s3ImageService.updateFiles(entity, files, requestDto);
+            return ResponseEntity.ok(updatedFiles);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @Operation(summary = "S3 Check Exist Files API")
+    @PostMapping("/check-files")
+    public ResponseEntity<List<FileEntity>> checkExistFiles(@RequestParam("files") List<MultipartFile> files) {
+        try {
+            List<FileEntity> existingFiles = s3ImageService.existsFiles(files);
+            return ResponseEntity.ok(existingFiles);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Operation(summary = "Delete File API")
+    @DeleteMapping("/delete-file")
+    public ResponseEntity<Void> deleteFile(@RequestParam("fileName") String fileName) {
+        try {
+            s3ImageService.deleteFile(fileName);
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

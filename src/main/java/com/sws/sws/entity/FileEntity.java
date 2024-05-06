@@ -1,16 +1,14 @@
 package com.sws.sws.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
+@Setter
 public class FileEntity {
 
     @Id
@@ -38,5 +36,9 @@ public class FileEntity {
     //파일 삭제 여부 추가
     @Column(nullable = false)
     private boolean  deleted;
+
+    public void checkDeleted() {
+        this.deleted = true;
+    }
 
 }
