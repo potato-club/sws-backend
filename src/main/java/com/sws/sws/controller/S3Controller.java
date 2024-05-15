@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/s3")
-@Tag(name = "AWS S3 upload Controller", description = "S3 업로드 API")
+@Tag(name = "AWS S3 upload Controller", description = "S3 API")
 public class S3Controller {
 
     private final S3ImageService s3ImageService;
