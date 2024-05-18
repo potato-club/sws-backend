@@ -21,7 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -36,13 +36,14 @@ public class SecurityConfig {
 
     private final RedisService redisService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CorsFilter corsFilter;
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //CSRF, CORS
         http.csrf(AbstractHttpConfigurer::disable);
-        http.cors(Customizer.withDefaults());
+        http.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class); // CorsFilter 추가
         http.httpBasic(AbstractHttpConfigurer::disable);
         //폼로그인 disable
         http.formLogin(AbstractHttpConfigurer::disable);
@@ -59,8 +60,6 @@ public class SecurityConfig {
                 SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(new JwtAuthenticationTokenFilter(jwtTokenProvider, redisService), UsernamePasswordAuthenticationFilter.class);
-
-
 
         return http.build();
     }
