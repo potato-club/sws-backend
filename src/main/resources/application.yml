@@ -2,13 +2,13 @@ server:
   port: 8081
 spring:
   datasource:
-    url: ENC(Pak3VxuYgko+IDuuC+sOZ49Rb9ffPpVZDGOxkM1rbZkqNlz7aPQ2zXRaDOYJrdisnFuOoPQ+xZ6bIAQyfM1TqJtJ00TIUxYhMV6yKQzZ4mU=)
-    username: ENC(fj2qWIkXfaWWM8+03trMMQ==)
-    password: ENC(STlkaVosBUfrvSi8nD6q1Ric/IbcdPB1)
+    url: ENC(F4eupi2wLRpFpPfCR6xbOfklTQOAGQOgHDMfHWWASLNlNOsJ/5OS/TlzGmW9UdJvy9jGjDJyBbX4MD2spA4O2a7WwcY/rTY1UtBFxNQiKmU=)
+    username: ENC(syMaFQ4P2EmCXr2+SpTLxg==)
+    password: ENC(KE0/qTNZ5CbPYAH+fg5LioViKHAkYw+W)
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
-      host: redis
+      host: localhost
       port: 6379
   jpa:
 #    database-platform: org.hibernate.dialect.MySQLDialect
@@ -27,25 +27,41 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: ENC(fkDPl+7g2CPGjwFoTNaslZTKPA1wOt26)
+      bucket: ENC(N1L6GSuGfXH70+am9rcz8Qnsohvl3MUB)
     region:
       auto: false
       static: ap-northeast-2
     credentials:
-      accessKey: ENC(1XV3KZpZja8KjHUcsqLdMjy1LSm+TTy+ClgWLlBfoMU=)
-      secretKey: ENC(+SB5pLFPtT3ptsNG2vjotwu6mWyLkUo0jnQhcHzLTrqU0yRaU84Ylfi6rEvxLte+RZg5bvzu628=)
+      accessKey: ENC(uucYFklN8+rYrmxgoRb7QN/R0Khk1dMvVMPNSLPfJK8=)
+      secretKey: ENC(NqTozh6XFfwdw1H/7gbjcZEJwnjgpWCbiIq5zmD7C3OuP6MCxlB/2LZdU8MaMVF0n+/GP0R4aJw=)
     stack:
       auto: false
 
 
 jwt:
-  secretKey: ENC(KBKVFcXoXDRLNYxe0GUTtDUQlsNFvZckn0TT3WjJYjhCNYV++LsvWp7qMvQNIGGk+pO/16Ty/CAwgLB3WRV5ivIo8po2O8HFhyLWtmdlvUrvb8iA8EFgcjgOlfgh5LIW)
+  secretKey: ENC(WWgQQP3HosGbkMjcfMsUVJVRXFCQLRwJPKDHVriS5Fks2MtggMKof3Tgtu/VVVwbLT2AZ5LtO7fi3HcQkdVtnuM4dzX9Do03DagsKnisre6EszKsUyz53IV1LfWS8nMO)
   accessExpiration : 18000
   refreshExpiration: 25000
 
 security:
   token:
     blacklistExpiration: 3600000
+  oauth2:
+    client:
+      registration:
+        kakao:
+          client-id: ENC(3DgI9TzVgD4WxxosMtuwMVvrf48rZps3tu5/5h9Lh/e3Bq06ieWAUdUsZon0t1Mx)
+          redirect-uri: ENC(LfU29KqMz74Sefz77YJFp78XQCICHkBDhs+CdXUO1uQsCK9K/A/jWpYarUIkbapH0cY4GpcJ3l8jccIN50wkiQ==)
+          authorization-grant-type: authorization_code
+          client-authentication-method: POST
+          client-name: Kakao
+          scope: profile_nickname
+      provider:
+        kakao:
+          authorization-uri: https://kauth.kakao.com/oauth/authorize
+          token-uri: https://kauth.kakao.com/oauth/token
+          user-info-uri: https://kapi.kakao.com/v2/user/me
+          user-name-attribute: id
 
 
 jasypt:
