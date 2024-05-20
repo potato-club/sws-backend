@@ -36,8 +36,6 @@ dependencies {
 	//security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
-	// swagger
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
 
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
@@ -78,8 +76,7 @@ dependencies {
 	implementation 'com.sun.xml.bind:jaxb-core:2.3.0.1'
 	implementation 'com.sun.xml.bind:jaxb-impl:2.3.2'
 
-	//webmvc
-	implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.6.14'
+
 
 
 }
