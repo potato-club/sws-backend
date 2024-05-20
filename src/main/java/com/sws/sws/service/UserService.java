@@ -44,6 +44,37 @@ public class UserService {
     private final FriendRepository friendRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisService redisService;
+    private final KaKaoApi kakaoApi;
+
+
+    public UserKakaoResponseDto kakaoLogin(String code, HttpServletResponse response) {
+        String access_token = kakaoApi.getAccessToken(code);
+        String email = kakaoApi.getUserInfo(access_token);
+
+        if (userRepository.existsByEmailAndIsDel(email, false)) {
+            this.setJwtTokenInHeader(email, response);
+
+            return UserKakaoResponseDto.builder()
+                    .responseCode("200")
+                    .build();
+        }
+
+        if (userRepository.existsByEmailAndIsDelIsTrue(email)) {
+            UserEntity user = userRepository.findByEmail(email).orElseThrow();
+            user.checkExist();
+            this.setJwtTokenInHeader(email, response);
+
+            return UserKakaoResponseDto.builder()
+                    .responseCode("2000")   // 회원가입 필요
+                    .build();
+        }
+
+        return UserKakaoResponseDto.builder()
+                .email(email)
+                .responseCode("201")
+                .build();
+    }
+
 
 
     public void signUp(SignupRequestDto requestDto) {
@@ -53,11 +84,13 @@ public class UserService {
         if (userRepository.existsByNickname(requestDto.getNickname())) {
             throw new UnAuthorizedException("401", ACCESS_DENIED_EXCEPTION);
         }
-        //카카오 로그인 로직 추후 추가
+
         requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         UserEntity userEntity = requestDto.toEntity();
         userRepository.save(userEntity);
     }
+
+
 
 
     public LoginResponseDto login(LoginRequestDto requestDto, HttpServletResponse response) {
