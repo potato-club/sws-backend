@@ -73,14 +73,14 @@ public class UserController {
     }
 
     @PostMapping("/leave")
-    @Operation(summary = "회원탈퇴")
+    @Operation(summary = "회원탈퇴(데이터베이스에 남아있음)")
     public ResponseEntity<?> leave(HttpServletRequest request) {
         userService.leave(request);
         return ResponseEntity.ok().body("탈퇴 처리되었습니다.");
     }
 
     @PostMapping("/delUser")
-    @Operation(summary = "???")
+    @Operation(summary = "영구탈퇴")
     public ResponseEntity<?> delUser(HttpServletRequest request) {
         userService.delUser(request);
         return ResponseEntity.ok().body("영구 탈퇴 처리되었습니다.");
