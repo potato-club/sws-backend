@@ -1,3 +1,5 @@
+openapi:
+  key: 4068c6df2e2747388f427f22ff430b2d
 server:
   port: 8081
 spring:
