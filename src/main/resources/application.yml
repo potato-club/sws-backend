@@ -40,8 +40,8 @@ cloud:
 
 jwt:
   secretKey: ENC(6Liyr+shDhDepUJ2cYem43YyLcHgmQl+TGW28psR+NH5evfBYgZRrddd5seoVqTIf4hu4gwPLjCnArQb1akOVYiLBbLkIiPh8ZmZmgFptLiXBHWFBC4JH8shqDwoD4RJ)
-  accessExpiration : 18000
-  refreshExpiration: 25000
+  accessExpiration : 1800000
+  refreshExpiration: 2500000
 
 security:
   token:
