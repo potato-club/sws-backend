@@ -2,9 +2,9 @@ server:
   port: 8081
 spring:
   datasource:
-    url: ENC(vZSHyMGk+GAdlKl29GX0V2BTBM4xRgdesz38syknA/CXFQf9IRTA3c6eDYuBcSybpxHof6VINDwBO9bhYdG/8plv2kSKhQXMvRmlhMapSEc=)
-    username: ENC(vHFDTivxX0/t5D9Ado7l+w==)
-    password: ENC(WaevxnAkf4D7ks9YsK9k4lShPfCHpabR)
+    url: ENC(Qe7gGSLROlTRtl+ybrHQnVW+Mu41MrYb1zqVJWtcALlgZIkIwG6drU5OuJ8TkFr1TC1EPA+jATfAmNmTyDpIVGO9VOzh/mDSH1CSEQmpptQ=)
+    username: ENC(4dL5K24+YsCQeLBYyfMQgA==)
+    password: ENC(5FOLe5lOHvD74vZoQeR/OMNHWHcaSWb4)
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
@@ -27,19 +27,19 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: ENC(1CJTkRAzAWDFgtEvHQVPhBx16Ge/Z29V)
+      bucket: ENC(ZTyWwtnwg44/eTlxM9dKm29RKv6IoRR2)
     region:
       auto: false
       static: ap-northeast-2
     credentials:
-      accessKey: ENC(mPCt6tx7q2O1tLtbeiiAK3HNcxkYygk5qjcB+aqQnIE=)
-      secretKey: ENC(nOqtWOp3rf3iM54Os7LW5OM1UA9Bzl4cbyRN7cEP2XvZH4xY1BgJnqmPD8AkEMSDZFPKh9Ic8TY=)
+      accessKey: ENC(Ii8IlGMFA/1Lfu5IFZjyEEB9xb/Pc8kqjDO2H9tEKGg=)
+      secretKey: ENC(IvVQW8tX9rSM0HmRsi/Kc7ADB07XX5+F6qIxzGoepxYvb4M0jFElk+Bi1CMZFZGV/qs4Wnr7Ez0=)
       auto: false
     stack:
 
 
 jwt:
-  secretKey: ENC(6Liyr+shDhDepUJ2cYem43YyLcHgmQl+TGW28psR+NH5evfBYgZRrddd5seoVqTIf4hu4gwPLjCnArQb1akOVYiLBbLkIiPh8ZmZmgFptLiXBHWFBC4JH8shqDwoD4RJ)
+  secretKey: ENC(3Dp2iazvSEd1MXpoaqPmuD5IcHvxNUjLa+uaJWgKlFDf2iiuOEDBg/e+p8nwUiEUHmxD7zpBbbWrXBN1eCBI43w+MsYhubgOZ2gL+uN6la0EHNFrSaneupbD7y5ZJAnV)
   accessExpiration : 1800000
   refreshExpiration: 2500000
 
@@ -50,8 +50,8 @@ security:
     client:
       registration:
         kakao:
-          client-id: ENC(KXs4zdTw7+/uFJoB66QfzYaXpul/17coD+Tr+fLfZYoUzUbvqIakpbj4Wjbf7L41)
-          redirect-uri : ENC(+BrpHEarr0VQ9W8opYCItVi7rjouOMyspADlXszCxM6TK81fLvsJBbk13PxinbsmWt+YrsGAeHlRZvx/Zrp7Pg==)
+          client-id: ENC(jBg067enz76zRIXaBDeyHp2XjhA/Fg1L9FZmPGpvc3iTTLFterzhk8gRT42XzHAZ)
+          redirect-uri : ENC(mCkKTsCu5iqB+Sxwah+MUzqFfsfJB2MRdrCJIW8DK0FaYJHxBPwkeHhTWZKztQP2)
           authorization-grant-type: authorization_code
           client-authentication-method: POST
           client-name: Kakao
