@@ -46,4 +46,17 @@ public class SwaggerConfig {
                 .addOpenApiCustomizer(api -> api.setInfo(info))
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi s3Api() {
+        Info info = new Info().title("S3 관련 API").version("v0.1");
+        String[] paths = {"/s3/**"};
+
+        return GroupedOpenApi.builder()
+                .group("s3")
+                .pathsToMatch(paths)
+                .displayName("S3's API")
+                .addOpenApiCustomizer(api -> api.setInfo(info))
+                .build();
+    }
 }
