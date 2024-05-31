@@ -44,8 +44,8 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
         // 자체 회원가입, 로그인 permitAll 설정
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/signup", "/login", "/reissue", "/client/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/client/signup", "/client/login", "/client/reissue", "/client/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .anyRequest().permitAll()
         );
 
         http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
