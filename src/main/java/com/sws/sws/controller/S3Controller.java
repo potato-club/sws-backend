@@ -1,6 +1,7 @@
 package com.sws.sws.controller;
 
 import com.sws.sws.dto.file.FileRequestDto;
+import com.sws.sws.dto.file.FileResponseDto;
 import com.sws.sws.entity.FileEntity;
 import com.sws.sws.service.S3ImageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +30,17 @@ public class S3Controller {
             FileEntity uploadedFile = s3ImageService.uploadFile(file);
             return ResponseEntity.ok(uploadedFile);
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Operation(summary = "Carousel S3 Upload API")
+    @PostMapping("/carousel")
+    public ResponseEntity<FileResponseDto> uploadCarousel(@RequestParam("file") MultipartFile file) {
+        try {
+            FileResponseDto fileResponseDto = s3ImageService.uploadCarousel(file);
+            return ResponseEntity.ok(fileResponseDto);
+        } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

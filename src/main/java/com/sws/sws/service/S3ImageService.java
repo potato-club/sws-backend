@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.sws.sws.dto.file.FileRequestDto;
+import com.sws.sws.dto.file.FileResponseDto;
 import com.sws.sws.entity.FileEntity;
 import com.sws.sws.entity.PostEntity;
 import com.sws.sws.entity.UserEntity;
@@ -139,5 +140,26 @@ public class S3ImageService {
         return fileList;
     }
 
+    //캐러셀 api 추가
+    @Transactional
+    public FileResponseDto uploadCarousel(MultipartFile multipartFile) throws IOException {
+        String fileName = UUID.randomUUID().toString() + "-" + multipartFile.getOriginalFilename();
+        String fileUrl = bucketName + "/" + fileName;
+        long fileSize = multipartFile.getSize();
 
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(fileSize);
+        metadata.setContentType(multipartFile.getContentType());
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, multipartFile.getInputStream(), metadata));
+
+        FileEntity file = FileEntity.builder()
+                .fileName(fileName)
+                .fileUrl(fileUrl)
+                .size(fileSize)
+                .deleted(false)
+                .build();
+        FileEntity savedFile = fileRepository.save(file);
+
+        return new FileResponseDto(savedFile.getId(), fileUrl);
+    }
 }

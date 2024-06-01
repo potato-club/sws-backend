@@ -29,8 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 import static com.sws.sws.error.ErrorCode.ACCESS_DENIED_EXCEPTION;
 import static com.sws.sws.error.ErrorCode.NOT_FOUND_EXCEPTION;
+
 
 
 @Service
@@ -45,7 +47,6 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisService redisService;
     private final KaKaoApi kakaoApi;
-
 
     public UserKakaoResponseDto kakaoLogin(String code, HttpServletResponse response) {
         String access_token = kakaoApi.getAccessToken(code);
@@ -74,6 +75,23 @@ public class UserService {
                 .responseCode("201")
                 .build();
     }
+
+
+
+    public void setJwtTokenInHeader(String email, HttpServletResponse response) {
+        UserRole userRole = userRepository.findByEmail(email).get().getUserRole();
+
+        String accessToken = jwtTokenProvider.createAccessToken(email, userRole);
+        String refreshToken = jwtTokenProvider.createRefreshToken(email, userRole);
+
+
+        jwtTokenProvider.setHeaderAT(response, accessToken);
+        jwtTokenProvider.setHeaderRT(response, refreshToken);
+
+        redisService.setValues(refreshToken, email);
+    }
+
+
 
 
 
@@ -116,20 +134,6 @@ public class UserService {
     public void logout(HttpServletRequest request) {
         redisService.delValues(jwtTokenProvider.resolveRefreshToken(request));
         jwtTokenProvider.expireToken(jwtTokenProvider.resolveAccessToken(request));
-    }
-
-
-    public void setJwtTokenInHeader(String email, HttpServletResponse response) {
-        UserRole userRole = userRepository.findByEmail(email).get().getUserRole();
-
-        String accessToken = jwtTokenProvider.createAccessToken(email, userRole);
-        String refreshToken = jwtTokenProvider.createRefreshToken(email, userRole);
-
-
-        jwtTokenProvider.setHeaderAT(response, accessToken);
-        jwtTokenProvider.setHeaderRT(response, refreshToken);
-
-        redisService.setValues(refreshToken, email);
     }
 
     //사용자 정보 조회
