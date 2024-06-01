@@ -2,6 +2,8 @@ package com.sws.sws.service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sws.sws.enums.UserRole;
+import com.sws.sws.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -9,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
+//닉네임추가해야함
 @Service
 @RequiredArgsConstructor
 public class KaKaoApi {
@@ -20,6 +22,8 @@ public class KaKaoApi {
     private String kakaoRedirectUri;
 
     private final RestTemplate restTemplate;
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     public String getAccessToken(String authorize_code) {
         String access_Token = "";
@@ -69,4 +73,5 @@ public class KaKaoApi {
 
         return email;
     }
+
 }
