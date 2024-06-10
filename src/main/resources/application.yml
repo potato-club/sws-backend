@@ -4,13 +4,13 @@ server:
   port: 8081
 spring:
   datasource:
-    url: ENC(Qe7gGSLROlTRtl+ybrHQnVW+Mu41MrYb1zqVJWtcALlgZIkIwG6drU5OuJ8TkFr1TC1EPA+jATfAmNmTyDpIVGO9VOzh/mDSH1CSEQmpptQ=)
-    username: ENC(4dL5K24+YsCQeLBYyfMQgA==)
-    password: ENC(5FOLe5lOHvD74vZoQeR/OMNHWHcaSWb4)
+    url: ENC(wVlKUvHvD8wXxe+Hm69twBQ6AdoklmXF2f1abSchW68LULvePT+QcRIAV6u9vunHtRJ1PoEXkonJ69tHGAhehwQEK1SMuvu0)
+    username: ENC(JgUBJbTqDEi848/W6Xi9zg==)
+    password: ENC(jxCLht2e+JorlFz45pnC3eZMUbk13fJp)
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
   jpa:
     hibernate:
