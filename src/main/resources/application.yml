@@ -1,3 +1,5 @@
+openapi:
+  key: 4068c6df2e2747388f427f22ff430b2d
 server:
   port: 8081
 spring:
@@ -8,10 +10,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
-      host: redis
+      host: localhost
       port: 6379
   jpa:
-    #    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
     properties:
@@ -24,18 +25,18 @@ spring:
     level:
       root: TRACE
 
-cloud:
-  aws:
-    s3:
-      bucket: ENC(ZTyWwtnwg44/eTlxM9dKm29RKv6IoRR2)
-    region:
-      auto: false
-      static: ap-northeast-2
-    credentials:
-      accessKey: ENC(Ii8IlGMFA/1Lfu5IFZjyEEB9xb/Pc8kqjDO2H9tEKGg=)
-      secretKey: ENC(IvVQW8tX9rSM0HmRsi/Kc7ADB07XX5+F6qIxzGoepxYvb4M0jFElk+Bi1CMZFZGV/qs4Wnr7Ez0=)
-      auto: false
-    stack:
+# cloud:
+#   aws:
+#     s3:
+#       bucket: ENC(ZTyWwtnwg44/eTlxM9dKm29RKv6IoRR2)
+#     region:
+#       auto: false
+#       static: ap-northeast-2
+#     credentials:
+#       accessKey: ENC(Ii8IlGMFA/1Lfu5IFZjyEEB9xb/Pc8kqjDO2H9tEKGg=)
+#       secretKey: ENC(IvVQW8tX9rSM0HmRsi/Kc7ADB07XX5+F6qIxzGoepxYvb4M0jFElk+Bi1CMZFZGV/qs4Wnr7Ez0=)
+#       auto: false
+#     stack:
 
 
 jwt:
