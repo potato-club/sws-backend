@@ -4,12 +4,9 @@ server:
   port: 8081
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/swsback
-    username: root
-    password: 123456
-#    url: ENC(KcZfiyL7xhIPYbr6Hjr2TFgPCe+loiQCoONsbe/TaB5G2DBlkCfyjIg7G+pA/VKE+NYRz55yxzspNajEDgh8aKdFMEl8yn/Ck+mXvj29lPE=)
-#    username: ENC(aVLZkl4iHCPJai7ySPLacw==)
-#    password: ENC(G3qoBrFWJLais1SByH2kLD16k5pulMPg)
+    url: ENC(Qe7gGSLROlTRtl+ybrHQnVW+Mu41MrYb1zqVJWtcALlgZIkIwG6drU5OuJ8TkFr1TC1EPA+jATfAmNmTyDpIVGO9VOzh/mDSH1CSEQmpptQ=)
+    username: ENC(4dL5K24+YsCQeLBYyfMQgA==)
+    password: ENC(5FOLe5lOHvD74vZoQeR/OMNHWHcaSWb4)
     driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
@@ -28,49 +25,46 @@ spring:
     level:
       root: TRACE
 
+# cloud:
+#   aws:
+#     s3:
+#       bucket: ENC(ZTyWwtnwg44/eTlxM9dKm29RKv6IoRR2)
+#     region:
+#       auto: false
+#       static: ap-northeast-2
+#     credentials:
+#       accessKey: ENC(Ii8IlGMFA/1Lfu5IFZjyEEB9xb/Pc8kqjDO2H9tEKGg=)
+#       secretKey: ENC(IvVQW8tX9rSM0HmRsi/Kc7ADB07XX5+F6qIxzGoepxYvb4M0jFElk+Bi1CMZFZGV/qs4Wnr7Ez0=)
+#       auto: false
+#     stack:
 
 
 jwt:
-  secretKey: gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767
-  #  secretKey: ENC(E2ngNWl5evNIbF856CLqAEcgtM5Xrv9DQjFAn9RnSVYNCxNXgNIO9Gw6mwESKwnPgd6cInFnT4qcpl2L0NKVRIeqpuDvlATsyCw2PPoiisOMNH+9q3TTCLUrO2VtDxiK)
-  accessExpiration : 18000
-  refreshExpiration: 25000
+  secretKey: ENC(3Dp2iazvSEd1MXpoaqPmuD5IcHvxNUjLa+uaJWgKlFDf2iiuOEDBg/e+p8nwUiEUHmxD7zpBbbWrXBN1eCBI43w+MsYhubgOZ2gL+uN6la0EHNFrSaneupbD7y5ZJAnV)
+  accessExpiration : 1800000
+  refreshExpiration: 2500000
 
 security:
   token:
     blacklistExpiration: 3600000
+  oauth2:
+    client:
+      registration:
+        kakao:
+          client-id: ENC(jBg067enz76zRIXaBDeyHp2XjhA/Fg1L9FZmPGpvc3iTTLFterzhk8gRT42XzHAZ)
+          redirect-uri : ENC(mCkKTsCu5iqB+Sxwah+MUzqFfsfJB2MRdrCJIW8DK0FaYJHxBPwkeHhTWZKztQP2)
+          authorization-grant-type: authorization_code
+          client-authentication-method: POST
+          client-name: Kakao
+          scope: account_email, profile_nickname
+      provider:
+        kakao:
+          authorization-uri: https://kauth.kakao.com/oauth/authorize
+          token-uri: https://kauth.kakao.com/oauth/token
+          user-info-uri: https://kapi.kakao.com/v2/user/me
+          user-name-attribute: id
+
 
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
-
-
-
-
-#server:
-#  port: 8080
-#spring:
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/swsback
-#    username: root
-#    password: 123456
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#  data:
-#    redis:
-#      host: localhost
-#      port: 6379
-#  jpa:
-#    #    database-platform: org.hibernate.dialect.MySQL8Dialect
-#    hibernate:
-#      ddl-auto: update
-#    properties:
-#      hibernate:
-#        enable_lazy_load_no_trans: true
-#        show_sql: false
-#        format_sql: true
-#    open-in-view: false
-#
-#jwt:
-#  secretKey: gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767gyuhgyyg6767
-#  accessExpiration: 3600000
-#  refreshExpiration: 604800000

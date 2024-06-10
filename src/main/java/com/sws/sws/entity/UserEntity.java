@@ -50,6 +50,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "userEntity")
     private List<LikeEntity> likes;
+//
+//    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+//    private List<FileEntity> files = new ArrayList<>();
 
     //    @OneToMany(mappedBy = "userEntity")
     //    private List<LocationEntity> locations;
@@ -83,8 +86,13 @@ public class UserEntity {
         this.isDel = true;
     }
 
+
     //    @Column(name = "is_del", columnDefinition = "TINYINT(1)", nullable = false)
     @Column(name = "is_del", columnDefinition = "TINYINT(1) DEFAULT '0'")
     private Boolean isDel;
+
+    public void checkExist() {
+        this.isDel = false;
+    }
 
 }
