@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/like")
+@CrossOrigin(origins = {"https://localhost:3000", "https://www.sws-back.shop", "http://localhost:3000"})
 public class LikeController {
 
     private final LikeService likeService;

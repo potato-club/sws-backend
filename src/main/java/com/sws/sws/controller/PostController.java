@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/post")
 @RequiredArgsConstructor
 @Tag(name = "Post Controller", description = "Post API")
+@CrossOrigin(origins = {"https://localhost:3000", "https://www.sws-back.shop", "http://localhost:3000"})
 public class PostController {
 
     private final PostService postService;

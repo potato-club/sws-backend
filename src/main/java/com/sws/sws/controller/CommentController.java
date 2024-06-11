@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/comment")
 @Tag(name = "Comment Controller", description = "Comment API")
+@CrossOrigin(origins = {"https://localhost:3000", "https://www.sws-back.shop", "http://localhost:3000"})
 public class CommentController {
 
     private final CommentService commentService;
