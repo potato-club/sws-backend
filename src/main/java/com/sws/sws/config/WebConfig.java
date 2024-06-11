@@ -27,11 +27,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         "http://localhost:3000",
                         "https://localhost:3000",
-                        "https://shallwestudy.store",
-                        "https://www.shallwestudy.store")
+                        "https://sws-back.shop",
+                        "https://www.sws-back.shop")
                 .exposedHeaders("authorization", "refreshToken", "Set-Cookie")
                 .allowedHeaders("*")
-                .allowedMethods("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS","PATCH")
                 .allowCredentials(true);
     }
 }
